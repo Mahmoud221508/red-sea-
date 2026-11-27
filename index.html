@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl" id="html-root" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Red Sea Center | بوابة العملاء</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,11 +15,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" type="text/javascript"></script>
 
-    <!-- Firebase -->
+    <!-- Firebase App Check & Cloud Functions -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, onSnapshot, query, orderBy }
-            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "PUT_YOUR_REAL_API_KEY_HERE",
@@ -30,19 +30,24 @@
             appId: "1:636976902247:web:0d5ffe643af368b6bad7a4c2"
         };
 
-        if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "PUT_YOUR_REAL_API_KEY_HERE") {
-            console.warn("Red Sea Center: يرجى وضع مفتاح Firebase API Key الحقيقي قبل النشر.");
-        }
-
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        Object.assign(window, { db, collection, addDoc, getDocs, doc, updateDoc, onSnapshot, query, orderBy });
 
-        window.ClientAppInit?.dbReady?.();
+        // ضع مفتاح reCAPTCHA v3 Site Key الحقيقي هنا
+        initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_SITE_KEY"),
+            isTokenAutoRefreshEnabled: true
+        });
+
+        const fn = getFunctions(app, "europe-west1");
+        window.api = Object.fromEntries(
+            ["createBooking", "trackOrder", "rateOrder", "lookupEquipment"].map(name => [name, httpsCallable(fn, name)])
+        );
+
+        window.ClientAppInit?.apiReady?.();
     </script>
 
     <style>
-        body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; }
         .glass-card { backdrop-filter: blur(16px); transition: background 0.3s ease, border 0.3s ease, color 0.3s ease; }
         html.dark body { background-color: #030712; color: #f3f4f6; }
         html.dark .glass-card { background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); }
@@ -89,7 +94,7 @@
 <body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
     <div id="offline-banner" class="hidden bg-rose-600 text-white text-center text-xs font-bold py-1.5">
-        <i class="fa-solid fa-wifi-slash ml-1"></i> <span data-i18n="offline">أنت غير متصل — سيتم المزامنة عند عودة الاتصال</span>
+        <i class="fa-solid fa-wifi-slash ml-1"></i> <span data-i18n="offline">أنت غير متصل — تحقق من اتصال الإنترنت</span>
     </div>
 
     <div id="toast-container"></div>
@@ -134,7 +139,8 @@
     </header>
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-8">
-        <!-- نفس المحتوى الأساسي للواجهة -->
+
+        <!-- ===== HOME (CLIENT BOOKING) ===== -->
         <div id="view-home" class="space-y-8">
             <section class="glass-card rounded-3xl p-6 sm:p-12 text-center relative overflow-hidden shadow-2xl">
                 <div class="absolute -top-32 -right-32 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -179,11 +185,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="label_name">الاسم ثلاثي *</label>
-                            <input type="text" id="pub-name" required minlength="5" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="الاسم ثلاثي أو اسم المنشأة">
+                            <input type="text" id="pub-name" required minlength="3" maxlength="80" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="الاسم ثلاثي أو اسم المنشأة">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="label_phone">رقم الهاتف *</label>
-                            <input type="tel" id="pub-phone" required pattern="01[0-9]{9}" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="010xxxxxxxx">
+                            <input type="tel" id="pub-phone" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="010xxxxxxxx">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -213,17 +219,22 @@
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300" data-i18n="label_address">العنوان بالتفصيل *</label>
                             <button type="button" onclick="ClientApp.getLiveLocation()" class="text-[11px] text-cyan-600 dark:text-cyan-400 font-bold bg-cyan-500/10 px-2 py-0.5 rounded-lg border border-cyan-500/30 hover:bg-cyan-500/20 transition"><i class="fa-solid fa-location-crosshairs ml-1"></i> <span data-i18n="btn_gps">تحديد موقعي GPS</span></button>
                         </div>
-                        <input type="text" id="pub-address" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="المدينة، الفندق/المطعم، المنطقة">
+                        <input type="text" id="pub-address" required minlength="3" maxlength="200" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="المدينة، الفندق/المطعم، المنطقة">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="label_details">تفاصيل إضافية</label>
-                        <textarea id="pub-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="مثال: رقم الغرفة أو وصف العطل أو وقت الزيارة المفضل"></textarea>
+                        <textarea id="pub-details" rows="2" maxlength="500" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition" placeholder="مثال: رقم الغرفة أو وصف العطل أو وقت الزيارة المفضل"></textarea>
                     </div>
+                    <label class="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 cursor-pointer select-none pt-1">
+                        <input type="checkbox" id="pub-auto-wa" checked class="w-4 h-4 accent-emerald-500 rounded">
+                        <span>فتح واتساب تلقائياً لإرسال رقم الأوردر بعد التسجيل</span>
+                    </label>
                     <button type="submit" id="btn-submit-booking" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold text-sm sm:text-base glow-btn" data-i18n="btn_submit_order">تأكيد حجز طلب الصيانة</button>
                 </form>
             </div>
         </div>
 
+        <!-- ===== BTU CALCULATOR ===== -->
         <div id="view-btu" class="hidden space-y-6 max-w-3xl mx-auto">
             <div class="glass-card p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl border border-cyan-500/30">
                 <div class="text-center">
@@ -231,6 +242,7 @@
                     <h3 class="text-xl font-black" data-i18n="btu_title">حاسبة القدرة التبريدية الذكية (BTU / HP)</h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" data-i18n="btu_desc">احسب القدرة الهندسية الدقيقة لغرف الفنادق، المطابخ، أو ثلاجات العرض</p>
                 </div>
+
                 <form onsubmit="ClientApp.calculateCoolingLoad(event)" class="space-y-4 text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
@@ -246,6 +258,7 @@
                             <input type="number" id="btu-height" required step="0.1" min="2" value="3" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 outline-none">
                         </div>
                     </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block font-bold mb-1" data-i18n="btu_exposure">طبيعة المكان / التعرض للشمس</label>
@@ -264,50 +277,61 @@
                             <input type="number" id="btu-appliances" min="0" step="0.5" value="0" placeholder="أفران / معدات" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 outline-none">
                         </div>
                     </div>
+
                     <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold text-sm glow-btn" data-i18n="btn_calc_load">احسب القدرة التبريدية والترشيح الهندسي</button>
                 </form>
+
                 <div id="btu-result-box" class="hidden p-5 rounded-2xl bg-cyan-950/30 border border-cyan-500/40 space-y-3 text-center"></div>
             </div>
         </div>
 
+        <!-- ===== TRACK ===== -->
         <div id="view-track" class="hidden space-y-6 max-w-2xl mx-auto">
             <div class="glass-card p-6 sm:p-8 rounded-3xl text-center space-y-4 shadow-xl">
                 <h3 class="text-xl sm:text-2xl font-black" data-i18n="track_title">تتبع حالة طلبك ومراحل التنفيذ</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="track_desc">ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل/الفندق.</p>
-                <div class="flex gap-2 max-w-md mx-auto">
-                    <input type="text" id="track-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchOrder();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500 transition" placeholder="RSC-123 أو الهاتف">
-                    <button type="button" onclick="ClientApp.searchOrder()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition" data-i18n="btn_search">بحث</button>
+                <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="track_desc">أدخل رقم التذكرة ورقم الهاتف المسجل للتحقق وعرض التفاصيل.</p>
+                <div class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+                    <input type="text" id="track-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchOrder();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500 transition uppercase" placeholder="RSC-701">
+                    <input type="tel" id="track-phone" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchOrder();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500 transition" placeholder="رقم الهاتف المسجل">
+                    <button type="button" id="btn-track-search" onclick="ClientApp.searchOrder()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition shrink-0" data-i18n="btn_search">بحث</button>
                 </div>
+
                 <div id="client-track-filter-bar" class="hidden flex justify-center gap-2 pt-1 text-xs">
                     <button type="button" onclick="ClientApp.setClientTrackFilter('all')" id="trk-filter-all" class="px-4 py-1.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold">الكل</button>
                     <button type="button" onclick="ClientApp.setClientTrackFilter('active')" id="trk-filter-active" class="px-4 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-rose-600 dark:text-rose-400 font-bold border border-rose-500/20">تحت التنفيذ</button>
                     <button type="button" onclick="ClientApp.setClientTrackFilter('done')" id="trk-filter-done" class="px-4 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">منتهي</button>
                 </div>
+
                 <div id="client-track-summary" class="hidden grid grid-cols-3 gap-2 pt-2 text-xs"></div>
             </div>
             <div id="track-result-container" class="space-y-4"></div>
         </div>
 
+        <!-- ===== EQUIPMENT QR ===== -->
         <div id="view-equipment" class="hidden space-y-6 max-w-2xl mx-auto">
             <div class="glass-card p-6 sm:p-8 rounded-3xl text-center space-y-4 shadow-xl border border-cyan-500/30">
                 <div class="w-12 h-12 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-2xl mx-auto flex items-center justify-center text-xl border border-cyan-500/20"><i class="fa-solid fa-qrcode"></i></div>
                 <h3 class="text-xl font-black" data-i18n="eq_title">بوابة فحص المعدة وسجل الصيانة (QR Asset)</h3>
                 <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="eq_desc">افتح الكاميرا لمسح الـ QR مباشرة، أو أدخل كود المعدة يدوياً.</p>
+
                 <div class="max-w-md mx-auto space-y-3">
                     <button type="button" onclick="ClientApp.startQrScanner()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-extrabold text-xs shadow-md flex items-center justify-center gap-2 glow-btn">
                         <i class="fa-solid fa-camera"></i> <span data-i18n="btn_scan">فتح الكاميرا لمسح QR المعدة</span>
                     </button>
                     <div id="reader" class="hidden w-full rounded-2xl overflow-hidden border border-cyan-500/40 bg-slate-950 p-2"></div>
                 </div>
+
                 <div class="flex gap-2 max-w-md mx-auto pt-2">
-                    <input type="text" id="eq-code-input" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500 transition" placeholder="EQ-101">
-                    <button type="button" onclick="ClientApp.searchEquipmentByCode()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition" data-i18n="btn_check">فحص المعدة</button>
+                    <input type="text" id="eq-code-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchEquipmentByCode();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500 transition uppercase" placeholder="EQ-101">
+                    <button type="button" id="btn-eq-check" onclick="ClientApp.searchEquipmentByCode()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition" data-i18n="btn_check">فحص المعدة</button>
                 </div>
             </div>
             <div id="eq-result-container" class="space-y-4"></div>
         </div>
+
     </main>
 
+    <!-- إيصال فاتورة العميل للطباعة PDF -->
     <div id="printable-client-receipt" class="printable hidden p-8 max-w-2xl mx-auto text-slate-950 bg-white font-sans">
         <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
             <h2 class="text-3xl font-black tracking-wider text-cyan-700">RED SEA CENTER</h2>
@@ -324,17 +348,10 @@
     <script>
     "use strict";
 
-    const CONFIG = {
-        MAX_ACTIVE_TECH_ORDERS: 8,
-        TECH_IDS: ["1","2","3","4","5","6","7","8","9","10"],
-        STORAGE_THEME: "rsc_client_theme",
-        STORAGE_LANG: "rsc_client_lang"
-    };
-
     const I18N = {
         ar: {
             dir: "rtl",
-            offline: "أنت غير متصل — سيتم المزامنة عند عودة الاتصال",
+            offline: "أنت غير متصل — تحقق من اتصال الإنترنت",
             client_badge: "بوابة العملاء",
             header_sub: "تكييف / ثلاجات وتبريد / هود (الاهواد) / أيس ميكر",
             nav_home: "الرئيسية",
@@ -379,7 +396,7 @@
             btu_appliances: "أجهزة حرارية إضافية (بالكيلووات kW)",
             btn_calc_load: "احسب القدرة التبريدية والترشيح الهندسي",
             track_title: "تتبع حالة طلبك ومراحل التنفيذ",
-            track_desc: "ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل/الفندق.",
+            track_desc: "أدخل رقم التذكرة ورقم الهاتف المسجل للتحقق وعرض التفاصيل.",
             btn_search: "بحث",
             eq_title: "بوابة فحص المعدة وسجل الصيانة (QR Asset)",
             eq_desc: "افتح الكاميرا لمسح الـ QR مباشرة، أو أدخل كود المعدة يدوياً.",
@@ -388,7 +405,7 @@
         },
         en: {
             dir: "ltr",
-            offline: "You are offline — changes will sync upon reconnection",
+            offline: "You are offline — check your internet connection",
             client_badge: "Client Portal",
             header_sub: "AC / Refrigeration / Kitchen Hoods / Ice Maker",
             nav_home: "Home",
@@ -433,7 +450,7 @@
             btu_appliances: "Additional Heat Sources (kW)",
             btn_calc_load: "Calculate Cooling Load & Engineering Specs",
             track_title: "Track Your Order Status & Progress",
-            track_desc: "Enter your ticket number, phone number, or client/hotel name.",
+            track_desc: "Enter your ticket number and registered phone number.",
             btn_search: "Search",
             eq_title: "Equipment Asset & Maintenance Log (QR Asset)",
             eq_desc: "Scan QR directly using camera, or enter equipment code manually.",
@@ -442,7 +459,7 @@
         },
         de: {
             dir: "ltr",
-            offline: "Sie sind offline — Änderungen werden bei Verbindung synchronisiert",
+            offline: "Sie sind offline — bitte Internetverbindung prüfen",
             client_badge: "Kundenportal",
             header_sub: "Klimaanlage / Kühlung / Küchenhauben / Eismaschine",
             nav_home: "Startseite",
@@ -487,7 +504,7 @@
             btu_appliances: "Zusätzliche Wärmequellen (kW)",
             btn_calc_load: "Kühllast & technische Daten berechnen",
             track_title: "Auftragsstatus & Fortschritt verfolgen",
-            track_desc: "Geben Sie Ihre Ticketnummer oder Telefonnummer ein.",
+            track_desc: "Geben Sie Ihre Ticketnummer und Telefonnummer ein.",
             btn_search: "Suchen",
             eq_title: "Anlagen- & Wartungsprotokoll (QR Asset)",
             eq_desc: "QR-Code direkt mit der Kamera scannen oder Anlagencode manuell eingeben.",
@@ -496,7 +513,7 @@
         },
         ru: {
             dir: "ltr",
-            offline: "Вы офлайн — изменения синхронизируются при подключении",
+            offline: "Вы офлайн — проверьте подключение к интернету",
             client_badge: "Портал клиентов",
             header_sub: "Кондиционеры / Холодильное оборудование / Вытяжки / Ледогенераторы",
             nav_home: "Главная",
@@ -541,7 +558,7 @@
             btu_appliances: "Дополнительные источники тепла (кВт)",
             btn_calc_load: "Рассчитать нагрузку и инженерные параметры",
             track_title: "Отслеживание статуса заказа",
-            track_desc: "Введите номер тикета или телефон.",
+            track_desc: "Введите номер тикета и телефон.",
             btn_search: "Поиск",
             eq_title: "Учет оборудования и журнал ТО (QR Asset)",
             eq_desc: "Сканируйте QR камерой или введите код вручную.",
@@ -552,32 +569,29 @@
 
     const state = {
         orders: [],
-        archiveOrders: [],
-        equipment: [],
         lang: "ar",
         trackFilter: "all",
         soundEnabled: true,
         lastBooking: null,
-        dbReady: false,
+        apiReady: false,
         submitting: false
     };
 
     let audioCtx = null;
-    const syncChannel = ("BroadcastChannel" in window) ? new BroadcastChannel("rsc_erp_sync_v82") : null;
-    const SYNC_STORAGE_KEY = "rsc_erp_live_ping";
 
     const round2 = n => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
     const money = n => `${round2(n).toLocaleString("en-US", { maximumFractionDigits: 2 })} ج.م`;
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[c]));
+    const f = id => document.getElementById(id)?.value.trim() || "";
 
     function formatStandardDate(d = new Date()) {
-        return d.toLocaleDateString("en-GB");
+        return d.toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" });
     }
 
     function formatStandardTime(d = new Date()) {
-        return d.toLocaleTimeString("en-GB", { hour12: false });
+        return d.toLocaleTimeString("en-GB", { hour12: false, timeZone: "Africa/Cairo" });
     }
 
     function toast(msg, type = "info", ms = 3200) {
@@ -586,12 +600,6 @@
         el.textContent = msg;
         document.getElementById("toast-container").appendChild(el);
         setTimeout(() => el.remove(), ms);
-    }
-
-    function broadcastSync(reason = "client_update") {
-        const payload = { reason, ts: Date.now() };
-        try { syncChannel?.postMessage(payload); } catch (_) {}
-        try { localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(payload)); } catch (_) {}
     }
 
     function unlockAudio() {
@@ -627,22 +635,16 @@
         toast(state.soundEnabled ? "تم تشغيل التنبيهات الصوتية" : "تم كتم التنبيهات الصوتية", "info");
     }
 
-    function applyTheme(isDark) {
+    function toggleTheme() {
         const root = document.getElementById("html-root");
         const icon = document.getElementById("theme-icon");
-        root.classList.toggle("dark", isDark);
-        if (icon) icon.className = isDark ? "fa-solid fa-moon" : "fa-solid fa-sun";
-        try { localStorage.setItem(CONFIG.STORAGE_THEME, isDark ? "dark" : "light"); } catch (_) {}
-    }
-
-    function toggleTheme() {
-        const isDark = !document.getElementById("html-root").classList.contains("dark");
-        applyTheme(isDark);
+        root.classList.toggle("dark");
+        const isDark = root.classList.contains("dark");
+        icon.className = isDark ? "fa-solid fa-moon" : "fa-solid fa-sun";
     }
 
     function changeLanguage(lang) {
         state.lang = lang;
-        try { localStorage.setItem(CONFIG.STORAGE_LANG, lang); } catch (_) {}
         const dict = I18N[lang] || I18N.ar;
         const root = document.getElementById("html-root");
         root.setAttribute("dir", dict.dir);
@@ -653,7 +655,7 @@
             if (dict[key]) el.textContent = dict[key];
         });
 
-        ["ar","en","de","ru"].forEach(l => {
+        ["ar", "en", "de", "ru"].forEach(l => {
             const b = document.getElementById(`lang-btn-${l}`);
             if (b) {
                 b.className = l === lang
@@ -675,9 +677,6 @@
                     : "px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-300 dark:hover:bg-slate-700 transition";
             }
         });
-        if (name === "track" && document.getElementById("track-input")?.value.trim()) {
-            searchOrder();
-        }
     }
 
     function quickSelectDevice(deviceVal, serviceVal) {
@@ -696,35 +695,8 @@
                 document.getElementById("pub-address").value = `الغردقة (GPS: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
                 toast("تم تحديد الموقع بنجاح", "success");
             },
-            () => toast("تعذر تحديد الموقع — تأكد من تفعيل GPS ومنح الإذن للتطبيق", "error")
+            () => toast("تعذر تحديد الموقع", "error")
         );
-    }
-
-    function getTechActiveCount(techId) {
-        return state.orders.filter(o => String(o.assignedTechUser) === String(techId) && o.status !== "done").length;
-    }
-
-    function getBalancedTechAssignment() {
-        const counts = {};
-        CONFIG.TECH_IDS.forEach(tk => { counts[tk] = getTechActiveCount(tk); });
-        const available = CONFIG.TECH_IDS.filter(tk => counts[tk] < CONFIG.MAX_ACTIVE_TECH_ORDERS);
-        if (!available.length) return CONFIG.TECH_IDS[0];
-        let chosen = available[0];
-        available.forEach(tk => {
-            if (counts[tk] < counts[chosen]) chosen = tk;
-        });
-        return chosen;
-    }
-
-    function generateUniqueTicketCode() {
-        const existing = new Set([...state.orders, ...state.archiveOrders].map(o => String(o.id || "").toUpperCase()));
-        let code = "";
-        let guard = 0;
-        do {
-            code = "RSC-" + Math.floor(100 + Math.random() * 900);
-            guard++;
-        } while (existing.has(code) && guard < 25);
-        return code;
     }
 
     function writeToClipboardFallback(text) {
@@ -764,8 +736,31 @@
         ].filter(Boolean).join("\n");
     }
 
+    function normalizePhoneIntl(phone) {
+        const digits = String(phone || "").replace(/\D/g, "");
+        if (!digits) return "";
+        if (digits.startsWith("20")) return digits;
+        if (digits.startsWith("0")) return "20" + digits.slice(1);
+        return digits;
+    }
+
+    function openWhatsAppForOrder(order, { notifyBlocked = false } = {}) {
+        if (!order) return false;
+        const text = buildBookingDetailsText(order);
+        const intlPhone = normalizePhoneIntl(order.phone);
+        const url = intlPhone
+            ? `https://wa.me/${intlPhone}?text=${encodeURIComponent(text)}`
+            : `https://wa.me/?text=${encodeURIComponent(text)}`;
+        const win = window.open(url, "_blank", "noopener,noreferrer");
+        if (!win && notifyBlocked) {
+            toast("حجب المتصفح نافذة واتساب — استخدم زر إرسال واتساب في البطاقة", "info", 4500);
+            return false;
+        }
+        return true;
+    }
+
     function copyBookingDetails(orderId) {
-        const order = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId) || state.lastBooking;
+        const order = state.orders.find(o => o.id === orderId) || state.lastBooking;
         if (!order) return toast("تعذر العثور على تفاصيل الحجز", "error");
         const text = buildBookingDetailsText(order);
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -778,23 +773,25 @@
     }
 
     function shareBookingDetails(orderId) {
-        const order = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId) || state.lastBooking;
+        const order = state.orders.find(o => o.id === orderId) || state.lastBooking;
         if (!order) return toast("تعذر العثور على تفاصيل الحجز", "error");
         const text = buildBookingDetailsText(order);
         if (navigator.share) {
             navigator.share({ title: `تأكيد حجز صيانة ${order.id} — Red Sea Center`, text }).catch(() => {
-                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+                openWhatsAppForOrder(order);
             });
         } else {
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+            openWhatsAppForOrder(order);
         }
     }
 
-    function trackConfirmedBooking(ticket) {
+    async function trackConfirmedBooking(ticket, phone) {
         switchView("track");
         const input = document.getElementById("track-input");
-        if (input) { input.value = ticket; input.focus(); }
-        searchOrder();
+        const phoneInput = document.getElementById("track-phone");
+        if (input) input.value = ticket;
+        if (phoneInput && phone) phoneInput.value = phone;
+        await searchOrder();
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -819,10 +816,13 @@
                     <p class="text-slate-600 dark:text-slate-400 text-[11px]">العنوان: <strong>${esc(order.address)}</strong></p>
                 </div>
                 <div class="flex gap-2 flex-wrap shrink-0">
+                    <button type="button" onclick="ClientApp.shareBookingDetails('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال واتساب
+                    </button>
                     <button type="button" onclick="ClientApp.startNewBookingFromBanner()" class="px-3.5 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
                         <i class="fa-solid fa-plus-circle"></i> حجز طلب جديد
                     </button>
-                    <button type="button" onclick="ClientApp.trackConfirmedBooking('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
+                    <button type="button" onclick="ClientApp.trackConfirmedBooking('${esc(order.id)}', '${esc(order.phone || "")}')" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
                         <i class="fa-solid fa-magnifying-glass"></i> تتبع الطلب
                     </button>
                     <button type="button" onclick="ClientApp.copyTicketCode('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold flex items-center gap-1 transition">
@@ -830,9 +830,6 @@
                     </button>
                     <button type="button" onclick="ClientApp.copyBookingDetails('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
                         <i class="fa-solid fa-copy"></i> نسخ التفاصيل
-                    </button>
-                    <button type="button" onclick="ClientApp.shareBookingDetails('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md transition">
-                        <i class="fa-solid fa-share-nodes"></i> مشاركة التفاصيل
                     </button>
                 </div>
             </div>
@@ -842,49 +839,50 @@
     async function handlePublicBooking(e) {
         e.preventDefault();
         if (state.submitting) return;
+        if (!window.api?.createBooking) return toast("النظام قيد التهيئة، حاول بعد لحظة", "info");
+
         state.submitting = true;
         const submitBtn = document.getElementById("btn-submit-booking");
+        const autoWa = Boolean(document.getElementById("pub-auto-wa")?.checked);
         if (submitBtn) submitBtn.disabled = true;
 
         unlockAudio();
-        const now = new Date();
-        const order = {
-            id: generateUniqueTicketCode(),
-            name: document.getElementById("pub-name").value.trim(),
-            phone: document.getElementById("pub-phone").value.trim(),
+        const data = {
+            name: f("pub-name"),
+            phone: f("pub-phone"),
             device: document.getElementById("pub-device").value,
             service: document.getElementById("pub-service").value,
-            address: document.getElementById("pub-address").value.trim(),
-            details: document.getElementById("pub-details").value.trim() || "-",
-            status: "new",
-            assignedTechUser: getBalancedTechAssignment(),
-            laborCost: 300, partsCost: 0, partsBuyCost: 0,
-            rating: 5, invoiced: false,
-            date: formatStandardDate(now),
-            time: formatStandardTime(now),
-            timestampMs: now.getTime()
+            address: f("pub-address"),
+            details: f("pub-details") || "-"
         };
 
         try {
-            let docId = "";
-            if (window.db && window.addDoc && window.collection) {
-                const ref = await window.addDoc(window.collection(window.db, "orders"), order);
-                docId = ref.id;
-            }
-            const savedOrder = { ...order, firebaseId: docId };
-            if (!state.orders.some(o => o.id === order.id)) {
-                state.orders.unshift(savedOrder);
-            }
-            broadcastSync("new_client_booking");
-            playConfirmTone();
+            const { data: r } = await window.api.createBooking(data);
+            const saved = {
+                ...data,
+                id: r.id,
+                status: "new",
+                date: formatStandardDate(),
+                time: formatStandardTime()
+            };
             e.target.reset();
-            renderClientReceiptBanner(savedOrder);
-            toast(`تم تأكيد حجز طلبك برقم ${order.id}`, "success");
+            const autoEl = document.getElementById("pub-auto-wa");
+            if (autoEl) autoEl.checked = autoWa;
+
+            playConfirmTone();
+            renderClientReceiptBanner(saved);
+            toast(`تم تأكيد حجز طلبك برقم ${r.id}`, "success");
+
+            if (autoWa) {
+                openWhatsAppForOrder(saved, { notifyBlocked: true });
+            }
+
             switchView("track");
-            document.getElementById("track-input").value = order.id;
-            searchOrder();
+            document.getElementById("track-input").value = r.id;
+            document.getElementById("track-phone").value = data.phone;
+            await searchOrder();
         } catch (err) {
-            toast("تعذر إرسال الطلب: " + err.message, "error");
+            toast("تعذر إرسال الطلب: " + (err.message || ""), "error");
         } finally {
             state.submitting = false;
             if (submitBtn) submitBtn.disabled = false;
@@ -923,20 +921,15 @@
         document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
     }
 
-    async function rateCompletedOrder(orderId, ratingVal) {
-        const target = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId || o.firebaseId === orderId);
-        if (!target) return toast("تعذر العثور على الطلب", "error");
-        const collName = state.archiveOrders.some(o => o.id === target.id) ? "archiveOrders" : "orders";
+    async function rateCompletedOrder(ticket, rating) {
+        const phone = f("track-phone");
+        if (!phone) return toast("أدخل رقم الهاتف المسجل أولاً", "error");
         try {
-            if (window.db && window.updateDoc && window.doc && target.firebaseId) {
-                await window.updateDoc(window.doc(window.db, collName, target.firebaseId), { rating: Number(ratingVal) });
-            }
-            target.rating = Number(ratingVal);
-            broadcastSync("client_rating");
-            toast(`شكراً لتقييمك (${ratingVal} نجوم)`, "success");
-            searchOrder();
+            await window.api.rateOrder({ ticket, phone, rating: Number(rating) });
+            toast(`شكراً لتقييمك (${rating} نجوم)`, "success");
+            await searchOrder();
         } catch (err) {
-            toast("تعذر حفظ التقييم: " + err.message, "error");
+            toast(err.message || "تعذر حفظ التقييم", "error");
         }
     }
 
@@ -960,7 +953,7 @@
     }
 
     function printClientOrderReceipt(orderId) {
-        const order = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId);
+        const order = state.orders.find(o => o.id === orderId);
         if (!order) return toast("تعذر العثور على بيانات الطلب", "error");
         const labor = round2(Number(order.laborCost) || 0);
         const parts = round2(Number(order.partsCost) || 0);
@@ -992,7 +985,7 @@
     }
 
     function copyClientOrderReceiptText(orderId) {
-        const order = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId);
+        const order = state.orders.find(o => o.id === orderId);
         if (!order) return toast("تعذر العثور على بيانات الطلب", "error");
         const text = buildClientReceiptText(order);
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1003,12 +996,12 @@
     }
 
     function shareClientOrderReceiptWhatsApp(orderId) {
-        const order = [...state.orders, ...state.archiveOrders].find(o => o.id === orderId);
+        const order = state.orders.find(o => o.id === orderId);
         if (!order) return toast("تعذر العثور على بيانات الطلب", "error");
         const msg = buildClientReceiptText(order);
-        const cleanPhone = String(order.phone || "").replace(/\D/g, "").replace(/^0/, "20");
+        const cleanPhone = normalizePhoneIntl(order.phone);
         const url = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-        window.open(url, "_blank");
+        window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function setClientTrackFilter(mode) {
@@ -1024,27 +1017,39 @@
                 btn.className = `px-4 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 ${colorClass} font-bold text-xs border border-slate-700/30`;
             }
         });
-        searchOrder();
+        renderTrackResults();
     }
 
-    function searchOrder() {
-        const q = document.getElementById("track-input").value.trim().toLowerCase();
+    async function searchOrder() {
+        const ticket = f("track-input").toUpperCase();
+        const phone = f("track-phone");
+        if (!ticket || !phone) return toast("أدخل رقم التذكرة ورقم الهاتف", "info");
+        if (!window.api?.trackOrder) return toast("النظام قيد التهيئة", "info");
+
+        const btn = document.getElementById("btn-track-search");
+        if (btn) btn.disabled = true;
+        try {
+            const res = await window.api.trackOrder({ ticket, phone });
+            state.orders = res.data?.orders || [];
+        } catch (err) {
+            state.orders = [];
+            toast(err.message || "تعذر البحث", "error");
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+        renderTrackResults();
+    }
+
+    function renderTrackResults() {
         const c = document.getElementById("track-result-container");
         const sumBox = document.getElementById("client-track-summary");
         const filterBar = document.getElementById("client-track-filter-bar");
-        if (!q) return;
-
-        const allMatched = [...state.orders, ...state.archiveOrders].filter(o =>
-            String(o.id || "").toLowerCase().includes(q)
-            || String(o.phone || "").includes(q)
-            || String(o.name || "").toLowerCase().includes(q)
-            || String(o.address || "").toLowerCase().includes(q)
-        );
+        const allMatched = state.orders;
 
         if (!allMatched.length) {
             sumBox?.classList.add("hidden");
             filterBar?.classList.add("hidden");
-            c.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-slate-600 dark:text-slate-400">لا توجد طلبات مطابقة لبحثك.</div>`;
+            c.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-slate-600 dark:text-slate-400">لا توجد طلبات مطابقة لرقم التذكرة والهاتف المدخلين.</div>`;
             return;
         }
 
@@ -1089,11 +1094,13 @@
                         ${isDone ? 'تم الانتهاء بنجاح (منتهي)' : 'تحت التنفيذ'}
                     </span>
                 </div>
+
                 <div class="grid grid-cols-3 gap-2 p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 text-center text-[11px]">
                     <div class="p-2 rounded-xl bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold"><i class="fa-solid fa-check-circle ml-1"></i> 1. تم الاستلام</div>
                     <div class="p-2 rounded-xl ${isProgress || isDone ? 'bg-rose-500/20 text-rose-800 dark:text-rose-300 font-bold' : 'text-slate-500'}"><i class="fa-solid fa-screwdriver-wrench ml-1"></i> 2. جاري التنفيذ</div>
                     <div class="p-2 rounded-xl ${isDone ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-bold' : 'text-slate-500'}"><i class="fa-solid fa-flag-checkered ml-1"></i> 3. تم الإنجاز</div>
                 </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div><strong>العميل:</strong> ${esc(order.name)}</div>
                     <div><strong>المعدة:</strong> ${esc(order.device)}</div>
@@ -1101,16 +1108,15 @@
                     <div><strong>العنوان:</strong> ${esc(order.address)}</div>
                     ${isDone && totalInvoice > 0 ? `<div class="sm:col-span-2 text-emerald-700 dark:text-emerald-400 font-bold">إجمالي الفاتورة المعتمدة: ${money(totalInvoice)}</div>` : ''}
                 </div>
-                ${order.beforeImg || order.afterImg ? `
-                <div class="pt-2 border-t flex gap-4 flex-wrap">
-                    ${order.beforeImg ? `<div><span class="text-[10px] text-slate-600 dark:text-slate-400 block mb-1">صورة العطل (قبل):</span><img src="${order.beforeImg}" class="w-24 h-20 object-cover rounded-xl border"></div>` : ''}
-                    ${order.afterImg ? `<div><span class="text-[10px] text-slate-600 dark:text-slate-400 block mb-1">الإصلاح (بعد):</span><img src="${order.afterImg}" class="w-24 h-20 object-cover rounded-xl border"></div>` : ''}
-                </div>` : ''}
+
                 ${isDone ? `
                 <div class="pt-3 border-t flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div class="flex items-center gap-1.5 flex-wrap">
-                        <span class="font-bold text-amber-700 dark:text-amber-400">تقييمك (${order.rating || 5} ★):</span>
-                        ${[5,4,3].map(st => `<button type="button" onclick="ClientApp.rateCompletedOrder('${esc(order.id)}', ${st})" class="px-2.5 py-1 rounded-lg ${Number(order.rating)===st?'bg-amber-500 text-slate-950 font-black':'bg-slate-200 dark:bg-slate-800 text-amber-700 dark:text-amber-400'}">${st} ★</button>`).join("")}
+                        ${order.rated
+                            ? `<span class="font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-star ml-1"></i> تم التقييم (${order.rating || 5} ★) — شكراً لثقتك</span>`
+                            : `<span class="font-bold text-amber-700 dark:text-amber-400">قيّم الخدمة:</span>
+                               ${[5,4,3,2,1].map(st => `<button type="button" onclick="ClientApp.rateCompletedOrder('${esc(order.id)}', ${st})" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-700 dark:text-amber-400 font-bold transition">${st} ★</button>`).join("")}`
+                        }
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <button type="button" onclick="ClientApp.printClientOrderReceipt('${esc(order.id)}')" class="px-3.5 py-2 rounded-xl bg-emerald-500 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md hover:bg-emerald-400 transition">
@@ -1128,23 +1134,34 @@
         }).join("");
     }
 
-    function searchEquipmentByCode() {
-        const code = document.getElementById("eq-code-input").value.trim().toUpperCase();
+    async function searchEquipmentByCode() {
+        const code = f("eq-code-input").toUpperCase();
         const c = document.getElementById("eq-result-container");
-        if (!code) return;
-        const eq = state.equipment.find(e => String(e.code || "").toUpperCase() === code);
-        if (!eq) {
-            c.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-rose-600 dark:text-rose-400">كود المعدة غير مسجل!</div>`;
-            return;
+        if (!code) return toast("أدخل كود المعدة أولاً", "info");
+        if (!window.api?.lookupEquipment) return toast("النظام قيد التهيئة", "info");
+
+        const btn = document.getElementById("btn-eq-check");
+        if (btn) btn.disabled = true;
+        try {
+            const res = await window.api.lookupEquipment({ code });
+            const eq = res.data?.equipment;
+            if (!eq) {
+                c.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-rose-600 dark:text-rose-400">كود المعدة غير مسجل!</div>`;
+                return;
+            }
+            c.innerHTML = `
+                <div class="glass-card p-6 rounded-3xl space-y-2 border border-cyan-500/40 text-xs">
+                    <strong class="text-base">${esc(eq.name)}</strong>
+                    <div>المنشأة: ${esc(eq.hotel)}</div>
+                    <div>الموقع: ${esc(eq.location)}</div>
+                    <div>الحالة: <strong class="text-emerald-600 dark:text-emerald-400">${esc(eq.status || 'ممتازة')}</strong></div>
+                    <div>الصيانة الدورية القادمة: <strong class="text-amber-700 dark:text-amber-400">${esc(eq.nextFilterDate || '-')}</strong></div>
+                </div>`;
+        } catch (err) {
+            toast(err.message || "تعذر فحص المعدة", "error");
+        } finally {
+            if (btn) btn.disabled = false;
         }
-        c.innerHTML = `
-            <div class="glass-card p-6 rounded-3xl space-y-2 border border-cyan-500/40 text-xs">
-                <strong class="text-base">${esc(eq.name)}</strong>
-                <div>المنشأة: ${esc(eq.hotel)}</div>
-                <div>الموقع: ${esc(eq.location)}</div>
-                <div>الحالة: <strong class="text-emerald-600 dark:text-emerald-400">${esc(eq.status || 'ممتازة')}</strong></div>
-                <div>الصيانة الدورية القادمة: <strong class="text-amber-700 dark:text-amber-400">${esc(eq.nextFilterDate || '-')}</strong></div>
-            </div>`;
     }
 
     let html5QrCode = null;
@@ -1162,76 +1179,23 @@
                 toast("تم مسح كود المعدة بنجاح", "success");
             },
             () => {}
-        ).catch(() => toast("الكاميرا غير متاحة — تحقق من أذونات الكاميرا وHTTPS", "error"));
+        ).catch(() => toast("الكاميرا غير متاحة", "error"));
     }
 
     function stopQrScanner() {
         if (html5QrCode && html5QrCode.isScanning) {
-            html5QrCode.stop().then(() => document.getElementById("reader")?.classList.add("hidden")).catch(() => {});
+            html5QrCode.stop().then(() => document.getElementById("reader")?.classList.add("hidden"));
         } else {
             document.getElementById("reader")?.classList.add("hidden");
         }
     }
 
-    function initRealtimeDatabase() {
-        try {
-            window.onSnapshot(window.query(window.collection(window.db, "orders"), window.orderBy("timestampMs", "desc")), snap => {
-                state.orders = snap.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
-                if (document.getElementById("track-input")?.value.trim()) searchOrder();
-            }, () => {});
-        } catch (_) {}
-
-        try {
-            window.onSnapshot(window.collection(window.db, "archiveOrders"), snap => {
-                state.archiveOrders = snap.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
-                if (document.getElementById("track-input")?.value.trim()) searchOrder();
-            }, () => {});
-        } catch (_) {}
-
-        try {
-            window.onSnapshot(window.collection(window.db, "equipment"), snap => {
-                state.equipment = snap.docs.map(d => ({ firebaseId: d.id, ...d.data() }));
-            }, () => {});
-        } catch (_) {}
-    }
-
-    function initCrossTabLiveSync() {
-        if (syncChannel) {
-            syncChannel.onmessage = () => {
-                if (document.getElementById("track-input")?.value.trim()) searchOrder();
-            };
-        }
-        window.addEventListener("storage", (e) => {
-            if (e.key === SYNC_STORAGE_KEY && e.newValue && document.getElementById("track-input")?.value.trim()) {
-                searchOrder();
-            }
-        });
-    }
-
-    function restorePreferences() {
-        try {
-            const savedTheme = localStorage.getItem(CONFIG.STORAGE_THEME);
-            if (savedTheme === "light") applyTheme(false);
-            const savedLang = localStorage.getItem(CONFIG.STORAGE_LANG);
-            if (savedLang && I18N[savedLang]) changeLanguage(savedLang);
-        } catch (_) {}
-    }
-
-    function bootstrap() {
-        restorePreferences();
-        if (!state.dbReady) return;
-        initRealtimeDatabase();
-        initCrossTabLiveSync();
-    }
-
-    window.ClientAppInit = { dbReady: () => { state.dbReady = true; bootstrap(); } };
-    restorePreferences();
-    if (window.db) { state.dbReady = true; bootstrap(); }
+    window.ClientAppInit = { apiReady: () => { state.apiReady = true; } };
+    if (window.api) state.apiReady = true;
 
     window.addEventListener("online", () => document.getElementById("offline-banner")?.classList.add("hidden"));
     window.addEventListener("offline", () => document.getElementById("offline-banner")?.classList.remove("hidden"));
     window.addEventListener("pointerdown", unlockAudio, { once: true });
-    window.addEventListener("pagehide", stopQrScanner);
 
     window.ClientApp = {
         toggleSound, toggleTheme, changeLanguage, switchView,

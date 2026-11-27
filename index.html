@@ -108,19 +108,24 @@ html:not(.dark) textarea {
 
 /* مفاجأة المولود الجديد يس */
 #baby-surprise-overlay {
+  display: none;
   position: fixed;
   inset: 0;
   z-index: 90;
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(3, 7, 18, 0.68);
+  background: rgba(3, 7, 18, 0.72);
   backdrop-filter: blur(6px);
-  opacity: 1;
-  transition: opacity 0.85s ease;
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
-#baby-surprise-overlay.fade-out {
+#baby-surprise-overlay.is-open {
+  display: flex;
+  opacity: 1;
+}
+#baby-surprise-overlay.is-closing {
+  display: flex;
   opacity: 0;
   pointer-events: none;
 }
@@ -135,11 +140,14 @@ html:not(.dark) textarea {
   border: 1px solid rgba(56, 189, 248, 0.45);
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.22);
   text-align: center;
-  transform: scale(0.92);
-  transition: transform 0.8s ease, opacity 0.8s ease;
+  transform: scale(0.94);
+  transition: transform 0.45s ease;
 }
-#baby-surprise-overlay.fade-out .baby-surprise-card {
-  transform: scale(0.85) translateY(-14px);
+#baby-surprise-overlay.is-open .baby-surprise-card {
+  transform: scale(1);
+}
+#baby-surprise-overlay.is-closing .baby-surprise-card {
+  transform: scale(0.9) translateY(-10px);
 }
 .baby-congrats-text {
   font-size: clamp(22px, 4.5vw, 34px);
@@ -202,7 +210,7 @@ html:not(.dark) textarea {
 <body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
   <!-- مفاجأة المولود الجديد يس -->
-  <div id="baby-surprise-overlay" class="hidden" aria-hidden="true">
+  <div id="baby-surprise-overlay" aria-hidden="true">
     <div id="baby-particles"></div>
     <div class="baby-surprise-card text-white">
       <div class="inline-block px-4 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-xs font-extrabold mb-3">
@@ -212,7 +220,7 @@ html:not(.dark) textarea {
       <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
         جعله الله من مواليد السعادة والبركة، وأقرّ به أعين والديه، وأنبته نباتاً حسناً.
       </p>
-      <button type="button" onclick="ClientApp.dismissBabySurprise()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-extrabold transition">
+      <button type="button" onclick="ClientApp.dismissBabySurprise()" class="px-6 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-extrabold transition cursor-pointer">
         إغلاق الآن
       </button>
     </div>
@@ -651,8 +659,8 @@ html:not(.dark) textarea {
 <script>
 "use strict";
 
-const CACHE_KEY = "rsc_client_portal_cache_v3";
-const BABY_SHOWN_KEY = "rsc_baby_yassin_shown_session";
+const CACHE_KEY = "rsc_client_portal_cache_v4";
+const BABY_SHOWN_KEY = "rsc_baby_yassin_shown_session_v2";
 const WHATSAPP_OFFICE_PHONE = "201000000000";
 
 const I18N = {
@@ -765,8 +773,8 @@ const state = {
 
 let html5QrCode = null;
 let isQrScanning = false;
-let babyFadeTimer = null;
-let babyHideTimer = null;
+let babyAutoCloseTimer = null;
+let babyFinishCloseTimer = null;
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -785,30 +793,34 @@ function toast(msg, type = "info", ms = 3200) {
 }
 
 /* مفاجأة المولود الجديد يس مع النفافيخ والورود والاختفاء التلقائي */
+function clearBabyTimers() {
+  if (babyAutoCloseTimer) { clearTimeout(babyAutoCloseTimer); babyAutoCloseTimer = null; }
+  if (babyFinishCloseTimer) { clearTimeout(babyFinishCloseTimer); babyFinishCloseTimer = null; }
+}
+
 function dismissBabySurprise() {
-  clearTimeout(babyFadeTimer);
-  clearTimeout(babyHideTimer);
+  clearBabyTimers();
   const overlay = document.getElementById("baby-surprise-overlay");
   const particles = document.getElementById("baby-particles");
   if (!overlay) return;
-  overlay.classList.add("fade-out");
-  babyHideTimer = setTimeout(() => {
-    overlay.classList.add("hidden");
-    overlay.classList.remove("fade-out");
+  overlay.classList.remove("is-open");
+  overlay.classList.add("is-closing");
+  babyFinishCloseTimer = setTimeout(() => {
+    overlay.classList.remove("is-closing");
     if (particles) particles.innerHTML = "";
-  }, 850);
+  }, 450);
 }
 
 function triggerBabySurprise() {
+  clearBabyTimers();
   const overlay = document.getElementById("baby-surprise-overlay");
   const particles = document.getElementById("baby-particles");
   if (!overlay || !particles) return;
 
-  clearTimeout(babyFadeTimer);
-  clearTimeout(babyHideTimer);
-
   particles.innerHTML = "";
-  overlay.classList.remove("hidden", "fade-out");
+  overlay.classList.remove("is-closing");
+  void overlay.offsetWidth;
+  overlay.classList.add("is-open");
 
   const flowers = ["🌸", "🌹", "🌷", "🌺", "🌼", "💐", "✨"];
   const colors = ["#38bdf8", "#f472b6", "#facc15", "#4ade80", "#c084fc", "#fb7185"];
@@ -834,7 +846,7 @@ function triggerBabySurprise() {
     particles.appendChild(item);
   }
 
-  babyFadeTimer = setTimeout(() => {
+  babyAutoCloseTimer = setTimeout(() => {
     dismissBabySurprise();
   }, 6000);
 }

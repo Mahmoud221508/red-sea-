@@ -15,12 +15,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" type="text/javascript"></script>
 
-    <!-- Firebase App Check & Cloud Functions -->
+    <!--
+    ==========================================================================
+    قواعد الحماية المطلوبة في Firebase Console -> Firestore Database -> Rules:
+    ==========================================================================
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /orders/{orderId} {
+          allow create: if true;
+          allow read: if true;
+          allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rated', 'rating']);
+        }
+        match /equipment/{eqId} {
+          allow read: if true;
+        }
+      }
+    }
+    ==========================================================================
+    -->
+
+    <!-- Firebase Firestore Direct Integration (Spark Free Plan Compatible) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+        import {
+            getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // ضع مفتاح Web API Key الحقيقي من Project Settings في Firebase
         const firebaseConfig = {
             apiKey: "PUT_YOUR_REAL_API_KEY_HERE",
             authDomain: "hvc-maintenance.firebaseapp.com",
@@ -31,17 +53,109 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // ضع مفتاح reCAPTCHA v3 Site Key الحقيقي هنا
-        initializeAppCheck(app, {
-            provider: new ReCaptchaV3Provider("YOUR_RECAPTCHA_SITE_KEY"),
-            isTokenAutoRefreshEnabled: true
-        });
+        const cleanPhone = p => String(p || "").replace(/\D/g, "");
 
-        const fn = getFunctions(app, "europe-west1");
-        window.api = Object.fromEntries(
-            ["createBooking", "trackOrder", "rateOrder", "lookupEquipment"].map(name => [name, httpsCallable(fn, name)])
-        );
+        function generateTicketId() {
+            const rnd = Math.floor(1000 + Math.random() * 9000);
+            return `RSC-${rnd}`;
+        }
+
+        window.api = {
+            createBooking: async (payload) => {
+                const ticketId = generateTicketId();
+                const now = new Date();
+                const dateStr = now.toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" });
+                const timeStr = now.toLocaleTimeString("en-GB", { hour12: false, timeZone: "Africa/Cairo" });
+
+                const orderDoc = {
+                    id: ticketId,
+                    name: String(payload.name || "").trim(),
+                    phone: String(payload.phone || "").trim(),
+                    phoneClean: cleanPhone(payload.phone),
+                    device: String(payload.device || "").trim(),
+                    service: String(payload.service || "").trim(),
+                    address: String(payload.address || "").trim(),
+                    details: String(payload.details || "-").trim(),
+                    status: "new",
+                    laborCost: 0,
+                    partsCost: 0,
+                    rated: false,
+                    rating: 0,
+                    date: dateStr,
+                    time: timeStr,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "orders"), orderDoc);
+                return { data: { id: ticketId } };
+            },
+
+            trackOrder: async ({ ticket, phone }) => {
+                const targetTicket = String(ticket || "").trim().toUpperCase();
+                const targetPhone = cleanPhone(phone);
+
+                const q = query(collection(db, "orders"), where("id", "==", targetTicket));
+                const snap = await getDocs(q);
+
+                const orders = [];
+                snap.forEach(d => {
+                    const item = d.data();
+                    const itemPhone = cleanPhone(item.phoneClean || item.phone);
+                    if (itemPhone && targetPhone && (itemPhone === targetPhone || itemPhone.endsWith(targetPhone) || targetPhone.endsWith(itemPhone))) {
+                        orders.push({ _docId: d.id, ...item });
+                    }
+                });
+
+                return { data: { orders } };
+            },
+
+            rateOrder: async ({ ticket, phone, rating }) => {
+                const targetTicket = String(ticket || "").trim().toUpperCase();
+                const targetPhone = cleanPhone(phone);
+
+                const q = query(collection(db, "orders"), where("id", "==", targetTicket));
+                const snap = await getDocs(q);
+
+                let matchedDocId = null;
+                snap.forEach(d => {
+                    const item = d.data();
+                    const itemPhone = cleanPhone(item.phoneClean || item.phone);
+                    if (itemPhone === targetPhone || itemPhone.endsWith(targetPhone) || targetPhone.endsWith(itemPhone)) {
+                        matchedDocId = d.id;
+                    }
+                });
+
+                if (!matchedDocId) throw new Error("بيانات التذكرة أو الهاتف غير مطابقة");
+
+                await updateDoc(doc(db, "orders", matchedDocId), {
+                    rated: true,
+                    rating: Number(rating) || 5
+                });
+
+                return { data: { ok: true } };
+            },
+
+            lookupEquipment: async ({ code }) => {
+                let targetCode = String(code || "").trim().toUpperCase();
+                if (targetCode.includes("CODE=")) {
+                    targetCode = targetCode.split("CODE=").pop().split("&")[0].trim();
+                } else if (targetCode.includes("/")) {
+                    targetCode = targetCode.split("/").pop().trim();
+                }
+
+                const q = query(collection(db, "equipment"), where("code", "==", targetCode));
+                const snap = await getDocs(q);
+
+                let equipment = null;
+                snap.forEach(d => {
+                    equipment = { _docId: d.id, ...d.data() };
+                });
+
+                return { data: { equipment } };
+            }
+        };
 
         window.ClientAppInit?.apiReady?.();
     </script>
@@ -195,7 +309,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="label_device">نوع المعدة أو الخدمة *</label>
-                            <select id="pub-device" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition">
+                            <select id="pub-device" onchange="ClientApp.checkServiceHint()" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition">
                                 <option value="تكييف اسبليت / مركزي" data-i18n="dev_ac">تكييف اسبليت / مركزي</option>
                                 <option value="ثلاجات وتبريد المطاعم / الفنادق" data-i18n="dev_fridge">ثلاجات وتبريد المطاعم / الفنادق</option>
                                 <option value="اصلاح وصيانة هود (الاهواد)" data-i18n="dev_hood">اصلاح وصيانة هود (الاهواد)</option>
@@ -205,7 +319,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="label_service">طبيعة الخدمة المطلوبة *</label>
-                            <select id="pub-service" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition">
+                            <select id="pub-service" onchange="ClientApp.checkServiceHint()" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none transition">
                                 <option value="كشف وإصلاح عطل فوري" data-i18n="srv_repair">كشف وإصلاح عطل فوري</option>
                                 <option value="صيانة دورية وعقود سنوية" data-i18n="srv_preventive">صيانة دورية وعقود سنوية</option>
                                 <option value="شحن فريون وتغيير قطع غيار" data-i18n="srv_freon">شحن فريون وتغيير قطع غيار</option>
@@ -214,6 +328,9 @@
                             </select>
                         </div>
                     </div>
+                    <p id="service-mismatch-hint" class="hidden text-[11px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2">
+                        <i class="fa-solid fa-circle-info ml-1"></i> تنبيه: هود المطبخ لا يستخدم فريون — يمكنك اختيار (كشف وإصلاح عطل فوري) أو (غسيل كيماوي وتنظيف فلاتر الدهون).
+                    </p>
                     <div>
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300" data-i18n="label_address">العنوان بالتفصيل *</label>
@@ -665,6 +782,15 @@
         });
     }
 
+    function checkServiceHint() {
+        const dev = document.getElementById("pub-device")?.value || "";
+        const srv = document.getElementById("pub-service")?.value || "";
+        const hint = document.getElementById("service-mismatch-hint");
+        if (!hint) return;
+        const isHoodFreon = dev.includes("هود") && srv.includes("فريون");
+        hint.classList.toggle("hidden", !isHoodFreon);
+    }
+
     const VIEWS = ["home", "track", "equipment", "btu"];
     function switchView(name) {
         if (name !== "equipment") stopQrScanner();
@@ -684,6 +810,7 @@
         const srvEl = document.getElementById("pub-service");
         if (devEl) devEl.value = deviceVal;
         if (srvEl) srvEl.value = serviceVal;
+        checkServiceHint();
         document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
         toast("تم تحديد نوع المعدة في نموذج الحجز", "info");
     }
@@ -799,6 +926,7 @@
         switchView("home");
         document.getElementById("client-receipt-banner")?.classList.add("hidden");
         document.getElementById("public-booking-form")?.reset();
+        checkServiceHint();
         document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
     }
 
@@ -866,6 +994,7 @@
                 time: formatStandardTime()
             };
             e.target.reset();
+            checkServiceHint();
             const autoEl = document.getElementById("pub-auto-wa");
             if (autoEl) autoEl.checked = autoWa;
 
@@ -918,6 +1047,7 @@
         document.getElementById("pub-device").value = "تكييف اسبليت / مركزي";
         document.getElementById("pub-service").value = "تركيب وتجهيز جديد بالكامل";
         document.getElementById("pub-details").value = `القدرة المحسوبة من حاسبة BTU: ${specText}`;
+        checkServiceHint();
         document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
     }
 
@@ -1198,7 +1328,7 @@
     window.addEventListener("pointerdown", unlockAudio, { once: true });
 
     window.ClientApp = {
-        toggleSound, toggleTheme, changeLanguage, switchView,
+        toggleSound, toggleTheme, changeLanguage, checkServiceHint, switchView,
         quickSelectDevice, getLiveLocation, handlePublicBooking,
         calculateCoolingLoad, bookFromBtu,
         rateCompletedOrder, printClientOrderReceipt, copyClientOrderReceiptText, shareClientOrderReceiptWhatsApp,

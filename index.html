@@ -272,7 +272,7 @@ html:not(.dark) textarea {
           </div>
 
           <button type="button" onclick="ClientApp.openB2BModal()" class="px-3.5 py-1.5 rounded-2xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs hover:bg-emerald-500/25 transition flex items-center gap-1.5 shadow-md">
-            <i class="fa-solid fa-hotel"></i> <span data-i18n="b2b_portal">بوابة الفنادق (B2B)</span>
+            <i class="fa-solid fa-building"></i> <span data-i18n="b2b_portal">بوابة المنشآت (B2B)</span>
           </button>
         </div>
       </div>
@@ -303,7 +303,7 @@ html:not(.dark) textarea {
         <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-bold mb-3 border border-cyan-500/20">
-          <i class="fa-solid fa-bolt ml-1"></i> <span data-i18n="hero_badge">Red Sea Center | صيانة الفنادق والمطاعم والتبريد التجاري</span>
+          <i class="fa-solid fa-bolt ml-1"></i> <span data-i18n="hero_badge">Red Sea Center | صيانة وتبريد للأفراد والمنشآت والمطاعم</span>
         </span>
         <h2 class="text-2xl sm:text-4xl font-black mb-3 leading-tight" data-i18n="hero_title">
           احجز صيانة معداتك وتابع التنفيذ خطوة بخطوة
@@ -356,8 +356,8 @@ html:not(.dark) textarea {
         <form id="public-booking-form" onsubmit="ClientApp.handleBookingSubmit(event)" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold mb-1" data-i18n="label_name">الاسم ثلاثي أو اسم المنشأة *</label>
-              <input type="text" id="pub-name" required minlength="3" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="مثال: محمود زين / فندق البحر الأحمر">
+              <label class="block text-xs font-bold mb-1" data-i18n="label_name">الاسم أو اسم الجهة / المنشأة *</label>
+              <input type="text" id="pub-name" required minlength="3" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="مثال: محمود زين أو اسم المحل / المطعم / السكن">
             </div>
             <div>
               <label class="block text-xs font-bold mb-1" data-i18n="label_phone">رقم الهاتف *</label>
@@ -395,12 +395,12 @@ html:not(.dark) textarea {
                 <i class="fa-solid fa-location-crosshairs ml-1"></i> <span data-i18n="btn_gps">تحديد موقعي GPS</span>
               </button>
             </div>
-            <input type="text" id="pub-address" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="المدينة، الفندق أو المطعم، المنطقة">
+            <input type="text" id="pub-address" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="الشارع، المنطقة، أو اسم المكان / الدور / الشقة">
           </div>
 
           <div>
             <label class="block text-xs font-bold mb-1" data-i18n="label_details">تفاصيل إضافية</label>
-            <textarea id="pub-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="رقم الغرفة أو المطبخ، كود المعدة (إن وُجد)، أو وصف العطل"></textarea>
+            <textarea id="pub-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="رقم الوحدة أو القسم، كود المعدة (إن وُجد)، أو وصف العطل"></textarea>
           </div>
 
           <label class="flex items-center gap-2 text-xs font-bold cursor-pointer select-none p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-300">
@@ -420,7 +420,7 @@ html:not(.dark) textarea {
       <div class="glass-card p-6 sm:p-8 rounded-3xl text-center space-y-4 shadow-xl">
         <h3 class="text-xl sm:text-2xl font-black" data-i18n="track_title">تتبع حالة طلبك ومراحل التنفيذ</h3>
         <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="track_desc">
-          ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / الفندق — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.
+          ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / المكان — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.
         </p>
 
         <div class="flex gap-2 max-w-md mx-auto">
@@ -513,7 +513,7 @@ html:not(.dark) textarea {
             <div>
               <label class="block font-bold mb-1" data-i18n="btu_exp">طبيعة المكان / التعرض للشمس</label>
               <select id="btu-exposure" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 outline-none">
-                <option value="300">غرفة فندقية / دور متوسط (عزل جيد)</option>
+                <option value="300">غرفة أو مكتب / دور متوسط (عزل جيد)</option>
                 <option value="400">دور أخير / واجهة مشمسة</option>
                 <option value="550">مطبخ تجاري / منطقة أفران وهود</option>
               </select>
@@ -625,20 +625,20 @@ html:not(.dark) textarea {
     </div>
   </div>
 
-  <!-- نافذة بوابة الفنادق والمطاعم (B2B) -->
+  <!-- نافذة بوابة المنشآت والعملاء (B2B) -->
   <div id="b2b-portal-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card max-w-lg w-full p-6 rounded-3xl space-y-4 shadow-2xl border border-emerald-500/30 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="text-base font-black text-emerald-600 dark:text-emerald-400">
-          <i class="fa-solid fa-hotel ml-2"></i> <span data-i18n="b2b_portal">بوابة الفنادق (B2B)</span>
+          <i class="fa-solid fa-building ml-2"></i> <span data-i18n="b2b_portal">بوابة المنشآت (B2B)</span>
         </h3>
         <button type="button" onclick="ClientApp.closeB2BModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="b2b_desc">
-        اكتب اسم الفندق أو المطعم لعرض المعدات المسجلة والطلبات السارية والمنتهية:
+        اكتب اسم المنشأة أو المطعم أو المكان لعرض المعدات المسجلة والطلبات السارية والمنتهية:
       </p>
       <div class="flex gap-2">
-        <input type="text" id="b2b-hotel-search" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.loadB2BData();}" placeholder="مثال: سيفا جراند أو المرسى" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
+        <input type="text" id="b2b-hotel-search" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.loadB2BData();}" placeholder="مثال: مطعم المرسى أو اسم المنشأة" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
         <button type="button" onclick="ClientApp.loadB2BData()" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs" data-i18n="b2b_show">
           عرض الملف
         </button>
@@ -651,7 +651,7 @@ html:not(.dark) textarea {
   <div id="printable-receipt" class="hidden p-8 max-w-2xl mx-auto text-slate-950 bg-white">
     <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
       <h2 class="text-3xl font-black text-cyan-700">RED SEA CENTER</h2>
-      <p class="text-xs text-gray-600 font-bold mt-1">إيصال خدمة صيانة معتمد — الغردقة</p>
+      <p class="text-xs text-gray-600 font-bold mt-1">إيصال خدمة صيانة معتمد — Red Sea Center</p>
       <p id="receipt-sub-date" class="text-[11px] text-gray-500 mt-1"></p>
     </div>
     <div id="receipt-body" class="space-y-4 text-sm"></div>
@@ -660,9 +660,9 @@ html:not(.dark) textarea {
 <script>
 "use strict";
 
-const CACHE_KEY = "rsc_client_portal_cache_v6";
+const CACHE_KEY = "rsc_client_portal_cache_v7";
 const BABY_SHOWN_KEY = "rsc_baby_yassin_shown_session_v2";
-const WHATSAPP_OFFICE_PHONE = "201000000000";
+const WHATSAPP_OFFICE_PHONE = "201030567142";
 
 const I18N = {
   ar: {
@@ -672,14 +672,14 @@ const I18N = {
     header_sub: "تكييف / ثلاجات وتبريد / هود / أيس ميكر / غرف تبريد",
     btn_baby: "مفاجأة أبو يس",
     btn_wa_admin: "واتساب الإدارة",
-    b2b_portal: "بوابة الفنادق (B2B)",
-    b2b_desc: "اكتب اسم الفندق أو المطعم لعرض المعدات المسجلة والطلبات السارية والمنتهية:",
+    b2b_portal: "بوابة المنشآت (B2B)",
+    b2b_desc: "اكتب اسم المنشأة أو المطعم أو المكان لعرض المعدات المسجلة والطلبات السارية والمنتهية:",
     b2b_show: "عرض الملف",
     nav_home: "حجز صيانة",
     nav_track: "تتبع طلبي",
     nav_qr: "فحص المعدة بالـ QR",
     nav_btu: "حاسبة التبريد BTU",
-    hero_badge: "Red Sea Center | صيانة الفنادق والمطاعم والتبريد التجاري",
+    hero_badge: "Red Sea Center | صيانة وتبريد للأفراد والمنشآت والمطاعم",
     hero_title: "احجز صيانة معداتك وتابع التنفيذ خطوة بخطوة",
     hero_desc: "سجّل بلاغك أو موعد الصيانة فوراً واحصل على رقم تذكرة لتتبع الحالة والتعديل أو الإلغاء قبل البدء وإرسال الإشعار عبر واتساب.",
     card_ac: "تكييف مركزي واسبليت",
@@ -689,7 +689,7 @@ const I18N = {
     btn_book: "احجز موعد صيانة الآن",
     booking_title: "حجز موعد صيانة أو تجهيز فوري",
     booking_desc: "املأ بياناتك وسيتم منحك رقم تذكرة خاصة للمتابعة الفورية وإرسال تفاصيل الحجز عبر واتساب.",
-    label_name: "الاسم ثلاثي أو اسم المنشأة *",
+    label_name: "الاسم أو اسم الجهة / المنشأة *",
     label_phone: "رقم الهاتف *",
     label_device: "نوع المعدة أو الخدمة *",
     label_service: "طبيعة الخدمة المطلوبة *",
@@ -699,7 +699,7 @@ const I18N = {
     label_auto_wa: "فتح واتساب وإرسال تفاصيل الحجز تلقائياً بعد التأكيد",
     btn_submit_order: "تأكيد حجز طلب الصيانة",
     track_title: "تتبع حالة طلبك ومراحل التنفيذ",
-    track_desc: "ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / الفندق — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.",
+    track_desc: "ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / المكان — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.",
     btn_search: "بحث",
     flt_all: "الكل",
     flt_new: "جديد",
@@ -728,14 +728,14 @@ const I18N = {
     header_sub: "AC / Refrigeration / Hoods / Ice Maker / Cold Rooms",
     btn_baby: "Abu Yassin Surprise",
     btn_wa_admin: "Admin WhatsApp",
-    b2b_portal: "Hotels Portal (B2B)",
-    b2b_desc: "Enter hotel or restaurant name to view registered equipment and orders:",
+    b2b_portal: "Facilities Portal (B2B)",
+    b2b_desc: "Enter facility, restaurant, or place name to view registered equipment and orders:",
     b2b_show: "Show Profile",
     nav_home: "Book Service",
     nav_track: "Track Order",
     nav_qr: "QR Asset Check",
     nav_btu: "BTU Calculator",
-    hero_badge: "Red Sea Center | Hotels, Restaurants & Commercial Cooling",
+    hero_badge: "Red Sea Center | Cooling & Maintenance for Individuals & Facilities",
     hero_title: "Book Equipment Maintenance & Track Every Step",
     hero_desc: "Submit your request, get a ticket number, edit or cancel while pending, and share via WhatsApp.",
     card_ac: "Central & Split AC",
@@ -745,7 +745,7 @@ const I18N = {
     btn_book: "Book Maintenance Now",
     booking_title: "Instant Maintenance or Setup Booking",
     booking_desc: "Fill in your details to receive a tracking ticket number and WhatsApp summary.",
-    label_name: "Full Name or Facility Name *",
+    label_name: "Name or Facility / Place Name *",
     label_phone: "Phone Number *",
     label_device: "Equipment or Service Type *",
     label_service: "Required Service *",
@@ -755,7 +755,7 @@ const I18N = {
     label_auto_wa: "Open WhatsApp and send booking details automatically",
     btn_submit_order: "Confirm Maintenance Request",
     track_title: "Track Order Status & Progress",
-    track_desc: "Enter ticket number, phone number, or client/hotel name.",
+    track_desc: "Enter ticket number, phone number, or client/place name.",
     btn_search: "Search",
     flt_all: "All",
     flt_new: "New",
@@ -784,8 +784,8 @@ const I18N = {
     header_sub: "Klima / Kühlung / Hauben / Eisbereiter / Kühlräume",
     btn_baby: "Abu Yassin Überraschung",
     btn_wa_admin: "Admin WhatsApp",
-    b2b_portal: "Hotelportal (B2B)",
-    b2b_desc: "Hotel- oder Restaurantnamen eingeben, um Geräte und Aufträge anzuzeigen:",
+    b2b_portal: "Objektportal (B2B)",
+    b2b_desc: "Namen des Objekts oder Restaurants eingeben, um Geräte und Aufträge anzuzeigen:",
     b2b_show: "Profil anzeigen",
     nav_home: "Wartung buchen",
     nav_track: "Auftrag verfolgen",
@@ -810,8 +810,8 @@ const I18N = {
     header_sub: "Климат / Холод / Зонты / Льдогенераторы / Камеры",
     btn_baby: "Сюрприз Абу Яссин",
     btn_wa_admin: "WhatsApp админа",
-    b2b_portal: "Портал отелей (B2B)",
-    b2b_desc: "Введите название отеля или ресторана для просмотра оборудования и заявок:",
+    b2b_portal: "Портал объектов (B2B)",
+    b2b_desc: "Введите название объекта или ресторана для просмотра оборудования и заявок:",
     b2b_show: "Показать",
     nav_home: "Заявка на сервис",
     nav_track: "Статус заказа",
@@ -1069,7 +1069,7 @@ function buildBookingSummaryText(order, tag = "تأكيد حجز صيانة") {
   return [
     `${tag} — Red Sea Center`,
     `رقم التذكرة: ${order.id}`,
-    `العميل / المنشأة: ${order.name}`,
+    `العميل / الجهة: ${order.name}`,
     `الهاتف: ${order.phone}`,
     `المعدة: ${order.device}`,
     `الخدمة: ${order.service}`,
@@ -1501,7 +1501,7 @@ function printReceipt(orderId) {
   document.getElementById("receipt-sub-date").textContent = `رقم التذكرة: ${order.id} — التاريخ: ${order.doneDate || order.date || ""}`;
   document.getElementById("receipt-body").innerHTML = `
     <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 border border-gray-300 rounded">
-      <div><strong>العميل / المنشأة:</strong> ${esc(order.name)}</div>
+      <div><strong>العميل / الجهة:</strong> ${esc(order.name)}</div>
       <div><strong>الهاتف:</strong> ${esc(order.phone)}</div>
       <div><strong>المعدة:</strong> ${esc(order.device)}</div>
       <div><strong>الخدمة:</strong> ${esc(order.service)}</div>
@@ -1562,7 +1562,7 @@ function searchEquipment(forcedCode) {
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <div><strong>المنشأة:</strong> ${esc(eq.hotel)}</div>
+        <div><strong>الجهة / المكان:</strong> ${esc(eq.hotel)}</div>
         <div><strong>الموقع:</strong> ${esc(eq.location)}</div>
         <div><strong>الحالة:</strong> <strong class="text-emerald-600 dark:text-emerald-400">${esc(eq.status || "سليمة")}</strong></div>
         <div><strong>الصيانة القادمة:</strong> <strong class="text-amber-600 dark:text-amber-400">${esc(eq.nextFilterDate || "-")}</strong></div>
@@ -1703,7 +1703,7 @@ const closeB2BModal = () => document.getElementById("b2b-portal-modal")?.classLi
 function loadB2BData() {
   const q = (document.getElementById("b2b-hotel-search")?.value || "").trim().toLowerCase();
   const resBox = document.getElementById("b2b-portal-results");
-  if (!q) return toast("اكتب اسم الفندق أو المنشأة", "error");
+  if (!q) return toast("اكتب اسم الجهة أو المكان أو المنشأة", "error");
 
   const eqList = state.equipment.filter(e => String(e.hotel || "").toLowerCase().includes(q));
   const ordList = [...state.orders, ...state.archiveOrders].filter(o =>

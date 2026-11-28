@@ -171,29 +171,29 @@ html:not(.dark) textarea {
   will-change: transform, opacity;
 }
 .baby-flower {
-  top: -50px;
-  font-size: var(--size, 26px);
+  top: -55px;
+  font-size: var(--size, 30px);
   animation: babyFallFlower var(--dur, 4.2s) linear var(--delay, 0s) forwards;
 }
 @keyframes babyFallFlower {
-  0% { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+  0% { transform: translate3d(0, -45px, 0) rotate(0deg); opacity: 0; }
   12% { opacity: 1; }
   100% { transform: translate3d(var(--drift, 40px), 108vh, 0) rotate(var(--rot, 360deg)); opacity: 0; }
 }
 .baby-bubble {
-  bottom: -50px;
-  width: var(--size, 26px);
-  height: var(--size, 26px);
+  bottom: -55px;
+  width: var(--size, 30px);
+  height: var(--size, 30px);
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.75), var(--color, #38bdf8) 55%, rgba(255,255,255,0.12));
-  box-shadow: inset 0 0 8px rgba(255,255,255,0.5), 0 6px 16px rgba(0,0,0,0.25);
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), var(--color, #38bdf8) 58%, rgba(255,255,255,0.14));
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.55), 0 8px 18px rgba(0,0,0,0.28);
   animation: babyRiseBubble var(--dur, 4.5s) ease-in var(--delay, 0s) forwards;
 }
 @keyframes babyRiseBubble {
   0% { transform: translate3d(0, 0, 0) scale(0.7); opacity: 0; }
-  15% { opacity: 0.9; }
-  85% { opacity: 0.85; }
-  100% { transform: translate3d(var(--drift, -35px), -112vh, 0) scale(1.1); opacity: 0; }
+  15% { opacity: 0.95; }
+  85% { opacity: 0.88; }
+  100% { transform: translate3d(var(--drift, -35px), -112vh, 0) scale(1.15); opacity: 0; }
 }
 
 @media print {
@@ -209,18 +209,18 @@ html:not(.dark) textarea {
 </head>
 <body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
-  <!-- مفاجأة المولود الجديد يس -->
+  <!-- مفاجأة المولود الجديد يس (تظهر تلقائياً عند الفتح فقط) -->
   <div id="baby-surprise-overlay" aria-hidden="true">
     <div id="baby-particles"></div>
     <div class="baby-surprise-card text-white">
-      <div class="inline-block px-4 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-xs font-extrabold mb-3">
+      <div class="inline-block px-4 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-xs font-extrabold mb-3" data-i18n="baby_badge">
         👶 قدوم المولود الجديد • يس
       </div>
-      <h2 class="baby-congrats-text mb-2">مليون مبروك على المولود الجديد يا أبو يس</h2>
-      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+      <h2 class="baby-congrats-text mb-2" data-i18n="baby_title">مليون مبروك على المولود الجديد يا أبو يس</h2>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4" data-i18n="baby_desc">
         جعله الله من مواليد السعادة والبركة، وأقرّ به أعين والديه، وأنبته نباتاً حسناً.
       </p>
-      <button type="button" onclick="ClientApp.dismissBabySurprise()" class="px-6 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-extrabold transition cursor-pointer">
+      <button type="button" onclick="ClientApp.dismissBabySurprise()" class="px-6 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-extrabold transition cursor-pointer" data-i18n="btn_close_now">
         إغلاق الآن
       </button>
     </div>
@@ -252,15 +252,11 @@ html:not(.dark) textarea {
         </div>
 
         <div class="flex items-center gap-2 flex-wrap justify-end">
-          <button type="button" onclick="ClientApp.triggerBabySurprise()" class="px-3 py-1.5 rounded-2xl bg-amber-400/20 text-amber-300 border border-amber-400/35 font-extrabold text-xs hover:bg-amber-400/30 transition flex items-center gap-1 shadow-md">
-            <span>🎉</span> <span data-i18n="btn_baby">مفاجأة أبو يس</span>
-          </button>
-
           <button type="button" onclick="ClientApp.openWhatsAppSupport()" class="px-3.5 py-1.5 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-xs hover:bg-emerald-400 transition flex items-center gap-1.5 shadow-md">
             <i class="fa-brands fa-whatsapp text-sm"></i> <span data-i18n="btn_wa_admin">واتساب الإدارة</span>
           </button>
 
-          <button type="button" onclick="ClientApp.toggleTheme()" class="p-2 rounded-2xl bg-slate-200 dark:bg-slate-900 text-slate-800 dark:text-amber-400 border border-slate-300 dark:border-slate-700 text-xs transition shadow-md" title="تغيير الثيم">
+          <button type="button" onclick="ClientApp.toggleTheme()" class="p-2 rounded-2xl bg-slate-200 dark:bg-slate-900 text-slate-800 dark:text-amber-400 border border-slate-300 dark:border-slate-700 text-xs transition shadow-md" data-i18n-title="title_theme" title="تغيير الثيم">
             <i id="theme-icon" class="fa-solid fa-moon"></i>
           </button>
 
@@ -272,7 +268,7 @@ html:not(.dark) textarea {
           </div>
 
           <button type="button" onclick="ClientApp.openB2BModal()" class="px-3.5 py-1.5 rounded-2xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs hover:bg-emerald-500/25 transition flex items-center gap-1.5 shadow-md">
-            <i class="fa-solid fa-building"></i> <span data-i18n="b2b_portal">بوابة المنشآت (B2B)</span>
+            <i class="fa-solid fa-hotel"></i> <span data-i18n="b2b_portal">بوابة الفنادق (B2B)</span>
           </button>
         </div>
       </div>
@@ -303,7 +299,7 @@ html:not(.dark) textarea {
         <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-bold mb-3 border border-cyan-500/20">
-          <i class="fa-solid fa-bolt ml-1"></i> <span data-i18n="hero_badge">Red Sea Center | صيانة وتبريد للأفراد والمنشآت والمطاعم</span>
+          <i class="fa-solid fa-bolt ml-1"></i> <span data-i18n="hero_badge">Red Sea Center | صيانة الفنادق والمطاعم والتبريد التجاري</span>
         </span>
         <h2 class="text-2xl sm:text-4xl font-black mb-3 leading-tight" data-i18n="hero_title">
           احجز صيانة معداتك وتابع التنفيذ خطوة بخطوة
@@ -356,12 +352,12 @@ html:not(.dark) textarea {
         <form id="public-booking-form" onsubmit="ClientApp.handleBookingSubmit(event)" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold mb-1" data-i18n="label_name">الاسم أو اسم الجهة / المنشأة *</label>
-              <input type="text" id="pub-name" required minlength="3" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="مثال: محمود زين أو اسم المحل / المطعم / السكن">
+              <label class="block text-xs font-bold mb-1" data-i18n="label_name">الاسم ثلاثي أو اسم المنشأة *</label>
+              <input type="text" id="pub-name" required minlength="3" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" data-i18n-placeholder="ph_name" placeholder="مثال: محمود زين السيد">
             </div>
             <div>
               <label class="block text-xs font-bold mb-1" data-i18n="label_phone">رقم الهاتف *</label>
-              <input type="tel" id="pub-phone" required pattern="01[0-9]{9}" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="010xxxxxxxx">
+              <input type="tel" id="pub-phone" required pattern="01[0-9]{9}" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" data-i18n-placeholder="ph_phone" placeholder="010xxxxxxxx">
             </div>
           </div>
 
@@ -369,21 +365,21 @@ html:not(.dark) textarea {
             <div>
               <label class="block text-xs font-bold mb-1" data-i18n="label_device">نوع المعدة أو الخدمة *</label>
               <select id="pub-device" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none">
-                <option value="تكييف اسبليت / مركزي">تكييف اسبليت / مركزي</option>
-                <option value="ثلاجات وتبريد المطاعم / الفنادق">ثلاجات وتبريد المطاعم / الفنادق</option>
-                <option value="اصلاح وصيانة هود">اصلاح وصيانة هود</option>
-                <option value="ايس ميكر (صانعة الثلج)">ايس ميكر (صانعة الثلج)</option>
-                <option value="غرف تبريد وتجميد">غرف تبريد وتجميد</option>
+                <option value="تكييف اسبليت / مركزي" data-i18n="opt_dev_ac">تكييف اسبليت / مركزي</option>
+                <option value="ثلاجات وتبريد المطاعم / الفنادق" data-i18n="opt_dev_ref">ثلاجات وتبريد المطاعم / الفنادق</option>
+                <option value="اصلاح وصيانة هود" data-i18n="opt_dev_hood">اصلاح وصيانة هود</option>
+                <option value="ايس ميكر (صانعة الثلج)" data-i18n="opt_dev_ice">ايس ميكر (صانعة الثلج)</option>
+                <option value="غرف تبريد وتجميد" data-i18n="opt_dev_cold">غرف تبريد وتجميد</option>
               </select>
             </div>
             <div>
               <label class="block text-xs font-bold mb-1" data-i18n="label_service">طبيعة الخدمة المطلوبة *</label>
               <select id="pub-service" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none">
-                <option value="كشف وإصلاح عطل فوري">كشف وإصلاح عطل فوري</option>
-                <option value="صيانة دورية وعقود سنوية">صيانة دورية وعقود سنوية</option>
-                <option value="شحن فريون وتغيير قطع غيار">شحن فريون وتغيير قطع غيار</option>
-                <option value="غسيل كيماوي وتنظيف فلاتر الدهون">غسيل كيماوي وتنظيف فلاتر الدهون</option>
-                <option value="تركيب وتجهيز جديد بالكامل">تركيب وتجهيز جديد بالكامل</option>
+                <option value="كشف وإصلاح عطل فوري" data-i18n="opt_srv_repair">كشف وإصلاح عطل فوري</option>
+                <option value="صيانة دورية وعقود سنوية" data-i18n="opt_srv_maint">صيانة دورية وعقود سنوية</option>
+                <option value="شحن فريون وتغيير قطع غيار" data-i18n="opt_srv_freon">شحن فريون وتغيير قطع غيار</option>
+                <option value="غسيل كيماوي وتنظيف فلاتر الدهون" data-i18n="opt_srv_wash">غسيل كيماوي وتنظيف فلاتر الدهون</option>
+                <option value="تركيب وتجهيز جديد بالكامل" data-i18n="opt_srv_install">تركيب وتجهيز جديد بالكامل</option>
               </select>
             </div>
           </div>
@@ -395,12 +391,12 @@ html:not(.dark) textarea {
                 <i class="fa-solid fa-location-crosshairs ml-1"></i> <span data-i18n="btn_gps">تحديد موقعي GPS</span>
               </button>
             </div>
-            <input type="text" id="pub-address" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="الشارع، المنطقة، أو اسم المكان / الدور / الشقة">
+            <input type="text" id="pub-address" required class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" data-i18n-placeholder="ph_address" placeholder="المدينة، الفندق أو المطعم، المنطقة">
           </div>
 
           <div>
             <label class="block text-xs font-bold mb-1" data-i18n="label_details">تفاصيل إضافية</label>
-            <textarea id="pub-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" placeholder="رقم الوحدة أو القسم، كود المعدة (إن وُجد)، أو وصف العطل"></textarea>
+            <textarea id="pub-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm focus:border-cyan-500 outline-none" data-i18n-placeholder="ph_details" placeholder="رقم الغرفة أو المطبخ، كود المعدة (إن وُجد)، أو وصف العطل"></textarea>
           </div>
 
           <label class="flex items-center gap-2 text-xs font-bold cursor-pointer select-none p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-300">
@@ -420,11 +416,11 @@ html:not(.dark) textarea {
       <div class="glass-card p-6 sm:p-8 rounded-3xl text-center space-y-4 shadow-xl">
         <h3 class="text-xl sm:text-2xl font-black" data-i18n="track_title">تتبع حالة طلبك ومراحل التنفيذ</h3>
         <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="track_desc">
-          ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / المكان — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.
+          ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / الفندق — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.
         </p>
 
         <div class="flex gap-2 max-w-md mx-auto">
-          <input type="text" id="track-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchOrders();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500" placeholder="مثال: RSC-... أو 010...">
+          <input type="text" id="track-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchOrders();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500" data-i18n-placeholder="ph_track" placeholder="مثال: RSC-... أو 010...">
           <button type="button" onclick="ClientApp.searchOrders()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition" data-i18n="btn_search">
             بحث
           </button>
@@ -470,7 +466,7 @@ html:not(.dark) textarea {
         </div>
 
         <div class="flex gap-2 max-w-md mx-auto pt-2">
-          <input type="text" id="eq-code-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchEquipment();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500" placeholder="كود المعدة مثل: EQ-2026">
+          <input type="text" id="eq-code-input" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.searchEquipment();}" class="flex-1 bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-cyan-500" data-i18n-placeholder="ph_eq" placeholder="كود المعدة مثل: EQ-2026">
           <button type="button" onclick="ClientApp.searchEquipment()" class="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-sm shadow-md hover:bg-cyan-400 transition" data-i18n="btn_check">
             فحص المعدة
           </button>
@@ -513,9 +509,9 @@ html:not(.dark) textarea {
             <div>
               <label class="block font-bold mb-1" data-i18n="btu_exp">طبيعة المكان / التعرض للشمس</label>
               <select id="btu-exposure" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-3 outline-none">
-                <option value="300">غرفة أو مكتب / دور متوسط (عزل جيد)</option>
-                <option value="400">دور أخير / واجهة مشمسة</option>
-                <option value="550">مطبخ تجاري / منطقة أفران وهود</option>
+                <option value="300" data-i18n="opt_exp_hotel">غرفة فندقية / دور متوسط (عزل جيد)</option>
+                <option value="400" data-i18n="opt_exp_sun">دور أخير / واجهة مشمسة</option>
+                <option value="550" data-i18n="opt_exp_kit">مطبخ تجاري / منطقة أفران وهود</option>
               </select>
             </div>
             <div>
@@ -544,47 +540,47 @@ html:not(.dark) textarea {
     <div class="glass-card max-w-lg w-full p-6 rounded-3xl space-y-4 shadow-2xl border border-cyan-500/30">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="text-base font-black text-cyan-600 dark:text-cyan-400">
-          <i class="fa-solid fa-pen-to-square ml-2"></i> تعديل بيانات الطلب <span id="edit-ord-ticket" class="font-mono text-xs"></span>
+          <i class="fa-solid fa-pen-to-square ml-2"></i> <span data-i18n="edit_modal_title">تعديل بيانات الطلب</span> <span id="edit-ord-ticket" class="font-mono text-xs"></span>
         </h3>
         <button type="button" onclick="ClientApp.closeEditOrderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <form id="edit-order-form" onsubmit="ClientApp.saveEditedOrder(event)" class="space-y-3 text-xs">
         <input type="hidden" id="edit-ord-id">
         <div>
-          <label class="block font-bold mb-1">نوع المعدة *</label>
+          <label class="block font-bold mb-1" data-i18n="edit_lbl_device">نوع المعدة *</label>
           <select id="edit-ord-device" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 outline-none">
-            <option value="تكييف اسبليت / مركزي">تكييف اسبليت / مركزي</option>
-            <option value="ثلاجات وتبريد المطاعم / الفنادق">ثلاجات وتبريد المطاعم / الفنادق</option>
-            <option value="اصلاح وصيانة هود">اصلاح وصيانة هود</option>
-            <option value="ايس ميكر (صانعة الثلج)">ايس ميكر (صانعة الثلج)</option>
-            <option value="غرف تبريد وتجميد">غرف تبريد وتجميد</option>
+            <option value="تكييف اسبليت / مركزي" data-i18n="opt_dev_ac">تكييف اسبليت / مركزي</option>
+            <option value="ثلاجات وتبريد المطاعم / الفنادق" data-i18n="opt_dev_ref">ثلاجات وتبريد المطاعم / الفنادق</option>
+            <option value="اصلاح وصيانة هود" data-i18n="opt_dev_hood">اصلاح وصيانة هود</option>
+            <option value="ايس ميكر (صانعة الثلج)" data-i18n="opt_dev_ice">ايس ميكر (صانعة الثلج)</option>
+            <option value="غرف تبريد وتجميد" data-i18n="opt_dev_cold">غرف تبريد وتجميد</option>
           </select>
         </div>
         <div>
-          <label class="block font-bold mb-1">طبيعة الخدمة *</label>
+          <label class="block font-bold mb-1" data-i18n="edit_lbl_service">طبيعة الخدمة *</label>
           <select id="edit-ord-service" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 outline-none">
-            <option value="كشف وإصلاح عطل فوري">كشف وإصلاح عطل فوري</option>
-            <option value="صيانة دورية وعقود سنوية">صيانة دورية وعقود سنوية</option>
-            <option value="شحن فريون وتغيير قطع غيار">شحن فريون وتغيير قطع غيار</option>
-            <option value="غسيل كيماوي وتنظيف فلاتر الدهون">غسيل كيماوي وتنظيف فلاتر الدهون</option>
-            <option value="تركيب وتجهيز جديد بالكامل">تركيب وتجهيز جديد بالكامل</option>
+            <option value="كشف وإصلاح عطل فوري" data-i18n="opt_srv_repair">كشف وإصلاح عطل فوري</option>
+            <option value="صيانة دورية وعقود سنوية" data-i18n="opt_srv_maint">صيانة دورية وعقود سنوية</option>
+            <option value="شحن فريون وتغيير قطع غيار" data-i18n="opt_srv_freon">شحن فريون وتغيير قطع غيار</option>
+            <option value="غسيل كيماوي وتنظيف فلاتر الدهون" data-i18n="opt_srv_wash">غسيل كيماوي وتنظيف فلاتر الدهون</option>
+            <option value="تركيب وتجهيز جديد بالكامل" data-i18n="opt_srv_install">تركيب وتجهيز جديد بالكامل</option>
           </select>
         </div>
         <div>
-          <label class="block font-bold mb-1">العنوان بالتفصيل *</label>
+          <label class="block font-bold mb-1" data-i18n="label_address">العنوان بالتفصيل *</label>
           <input type="text" id="edit-ord-address" required minlength="3" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 outline-none">
         </div>
         <div>
-          <label class="block font-bold mb-1">تفاصيل إضافية</label>
+          <label class="block font-bold mb-1" data-i18n="label_details">تفاصيل إضافية</label>
           <textarea id="edit-ord-details" rows="2" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 outline-none"></textarea>
         </div>
         <label class="flex items-center gap-2 font-bold cursor-pointer p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-300">
           <input type="checkbox" id="edit-ord-send-wa" checked class="accent-emerald-500 w-4 h-4 rounded">
-          <span>إرسال إشعار التعديل عبر واتساب للإدارة</span>
+          <span data-i18n="edit_send_wa">إرسال إشعار التعديل عبر واتساب للإدارة</span>
         </label>
         <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold">حفظ التعديلات</button>
-          <button type="button" onclick="ClientApp.closeEditOrderModal()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold">إلغاء</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold" data-i18n="btn_save_changes">حفظ التعديلات</button>
+          <button type="button" onclick="ClientApp.closeEditOrderModal()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold" data-i18n="btn_cancel_modal">إلغاء</button>
         </div>
       </form>
     </div>
@@ -595,50 +591,50 @@ html:not(.dark) textarea {
     <div class="glass-card max-w-md w-full p-6 rounded-3xl space-y-4 shadow-2xl border border-rose-500/40">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="text-base font-black text-rose-600 dark:text-rose-400">
-          <i class="fa-solid fa-ban ml-2"></i> إلغاء الطلب <span id="cancel-ord-ticket" class="font-mono text-xs"></span>
+          <i class="fa-solid fa-ban ml-2"></i> <span data-i18n="cancel_modal_title">إلغاء الطلب</span> <span id="cancel-ord-ticket" class="font-mono text-xs"></span>
         </h3>
         <button type="button" onclick="ClientApp.closeCancelOrderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <form id="cancel-order-form" onsubmit="ClientApp.confirmCancelOrder(event)" class="space-y-3 text-xs">
         <input type="hidden" id="cancel-ord-id">
-        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="cancel_confirm_desc">
           هل أنت متأكد من إلغاء هذا الطلب قبل بدء التنفيذ؟ يمكنك ذكر السبب وسيتم إشعار الإدارة عبر واتساب.
         </p>
         <div>
-          <label class="block font-bold mb-1">سبب الإلغاء</label>
+          <label class="block font-bold mb-1" data-i18n="cancel_reason_lbl">سبب الإلغاء</label>
           <select id="cancel-ord-reason" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 outline-none">
-            <option value="تم حل المشكلة مؤقتاً">تم حل المشكلة مؤقتاً</option>
-            <option value="تأجيل الموعد لوقت لاحق">تأجيل الموعد لوقت لاحق</option>
-            <option value="حجز مكرر بالخطأ">حجز مكرر بالخطأ</option>
-            <option value="تغيير تفاصيل الصيانة وإعادة الحجز">تغيير تفاصيل الصيانة وإعادة الحجز</option>
+            <option value="تم حل المشكلة مؤقتاً" data-i18n="opt_rsn_temp">تم حل المشكلة مؤقتاً</option>
+            <option value="تأجيل الموعد لوقت لاحق" data-i18n="opt_rsn_postpone">تأجيل الموعد لوقت لاحق</option>
+            <option value="حجز مكرر بالخطأ" data-i18n="opt_rsn_dup">حجز مكرر بالخطأ</option>
+            <option value="تغيير تفاصيل الصيانة وإعادة الحجز" data-i18n="opt_rsn_rebook">تغيير تفاصيل الصيانة وإعادة الحجز</option>
           </select>
         </div>
         <label class="flex items-center gap-2 font-bold cursor-pointer p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-300">
           <input type="checkbox" id="cancel-ord-send-wa" checked class="accent-emerald-500 w-4 h-4 rounded">
-          <span>إبلاغ الإدارة بالإلغاء عبر واتساب</span>
+          <span data-i18n="cancel_send_wa">إبلاغ الإدارة بالإلغاء عبر واتساب</span>
         </label>
         <div class="flex gap-2 pt-2">
-          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold">تأكيد إلغاء الطلب</button>
-          <button type="button" onclick="ClientApp.closeCancelOrderModal()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold">رجوع</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold" data-i18n="btn_confirm_cancel">تأكيد إلغاء الطلب</button>
+          <button type="button" onclick="ClientApp.closeCancelOrderModal()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold" data-i18n="btn_back">رجوع</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- نافذة بوابة المنشآت والعملاء (B2B) -->
+  <!-- نافذة بوابة الفنادق والمطاعم (B2B) -->
   <div id="b2b-portal-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card max-w-lg w-full p-6 rounded-3xl space-y-4 shadow-2xl border border-emerald-500/30 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="text-base font-black text-emerald-600 dark:text-emerald-400">
-          <i class="fa-solid fa-building ml-2"></i> <span data-i18n="b2b_portal">بوابة المنشآت (B2B)</span>
+          <i class="fa-solid fa-hotel ml-2"></i> <span data-i18n="b2b_portal">بوابة الفنادق (B2B)</span>
         </h3>
         <button type="button" onclick="ClientApp.closeB2BModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="b2b_desc">
-        اكتب اسم المنشأة أو المطعم أو المكان لعرض المعدات المسجلة والطلبات السارية والمنتهية:
+        اكتب اسم الفندق أو المطعم لعرض المعدات المسجلة والطلبات السارية والمنتهية:
       </p>
       <div class="flex gap-2">
-        <input type="text" id="b2b-hotel-search" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.loadB2BData();}" placeholder="مثال: مطعم المرسى أو اسم المنشأة" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
+        <input type="text" id="b2b-hotel-search" onkeydown="if(event.key==='Enter'){event.preventDefault();ClientApp.loadB2BData();}" data-i18n-placeholder="ph_b2b" placeholder="مثال: سيفا جراند أو المرسى" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
         <button type="button" onclick="ClientApp.loadB2BData()" class="px-4 py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs" data-i18n="b2b_show">
           عرض الملف
         </button>
@@ -651,7 +647,7 @@ html:not(.dark) textarea {
   <div id="printable-receipt" class="hidden p-8 max-w-2xl mx-auto text-slate-950 bg-white">
     <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
       <h2 class="text-3xl font-black text-cyan-700">RED SEA CENTER</h2>
-      <p class="text-xs text-gray-600 font-bold mt-1">إيصال خدمة صيانة معتمد — Red Sea Center</p>
+      <p class="text-xs text-gray-600 font-bold mt-1" data-i18n="receipt_sub">إيصال خدمة صيانة معتمد — الغردقة</p>
       <p id="receipt-sub-date" class="text-[11px] text-gray-500 mt-1"></p>
     </div>
     <div id="receipt-body" class="space-y-4 text-sm"></div>
@@ -660,26 +656,32 @@ html:not(.dark) textarea {
 <script>
 "use strict";
 
-const CACHE_KEY = "rsc_client_portal_cache_v7";
+const CACHE_KEY = "rsc_client_portal_cache_v6";
 const BABY_SHOWN_KEY = "rsc_baby_yassin_shown_session_v2";
-const WHATSAPP_OFFICE_PHONE = "201030567142";
+const WHATSAPP_OFFICE_PHONE = "201000000000";
 
 const I18N = {
   ar: {
     dir: "rtl",
+    currency: "ج.م",
+    title_theme: "تغيير الثيم",
     offline: "أنت غير متصل — سيتم حفظ طلبك محلياً ومزامنته فور عودة الاتصال",
+    baby_badge: "👶 قدوم المولود الجديد • يس",
+    baby_title: "مليون مبروك على المولود الجديد يا أبو يس",
+    baby_desc: "جعله الله من مواليد السعادة والبركة، وأقرّ به أعين والديه، وأنبته نباتاً حسناً.",
+    btn_close_now: "إغلاق الآن",
     client_badge: "لوحة العميل",
     header_sub: "تكييف / ثلاجات وتبريد / هود / أيس ميكر / غرف تبريد",
-    btn_baby: "مفاجأة أبو يس",
     btn_wa_admin: "واتساب الإدارة",
-    b2b_portal: "بوابة المنشآت (B2B)",
-    b2b_desc: "اكتب اسم المنشأة أو المطعم أو المكان لعرض المعدات المسجلة والطلبات السارية والمنتهية:",
+    b2b_portal: "بوابة الفنادق (B2B)",
+    b2b_desc: "اكتب اسم الفندق أو المطعم لعرض المعدات المسجلة والطلبات السارية والمنتهية:",
     b2b_show: "عرض الملف",
+    ph_b2b: "مثال: سيفا جراند أو المرسى",
     nav_home: "حجز صيانة",
     nav_track: "تتبع طلبي",
     nav_qr: "فحص المعدة بالـ QR",
     nav_btu: "حاسبة التبريد BTU",
-    hero_badge: "Red Sea Center | صيانة وتبريد للأفراد والمنشآت والمطاعم",
+    hero_badge: "Red Sea Center | صيانة الفنادق والمطاعم والتبريد التجاري",
     hero_title: "احجز صيانة معداتك وتابع التنفيذ خطوة بخطوة",
     hero_desc: "سجّل بلاغك أو موعد الصيانة فوراً واحصل على رقم تذكرة لتتبع الحالة والتعديل أو الإلغاء قبل البدء وإرسال الإشعار عبر واتساب.",
     card_ac: "تكييف مركزي واسبليت",
@@ -689,17 +691,32 @@ const I18N = {
     btn_book: "احجز موعد صيانة الآن",
     booking_title: "حجز موعد صيانة أو تجهيز فوري",
     booking_desc: "املأ بياناتك وسيتم منحك رقم تذكرة خاصة للمتابعة الفورية وإرسال تفاصيل الحجز عبر واتساب.",
-    label_name: "الاسم أو اسم الجهة / المنشأة *",
+    label_name: "الاسم ثلاثي أو اسم المنشأة *",
+    ph_name: "مثال: محمود زين السيد",
     label_phone: "رقم الهاتف *",
+    ph_phone: "010xxxxxxxx",
     label_device: "نوع المعدة أو الخدمة *",
     label_service: "طبيعة الخدمة المطلوبة *",
     label_address: "العنوان بالتفصيل *",
+    ph_address: "المدينة، الفندق أو المطعم، المنطقة",
     btn_gps: "تحديد موقعي GPS",
     label_details: "تفاصيل إضافية",
+    ph_details: "رقم الغرفة أو المطبخ، كود المعدة (إن وُجد)، أو وصف العطل",
     label_auto_wa: "فتح واتساب وإرسال تفاصيل الحجز تلقائياً بعد التأكيد",
     btn_submit_order: "تأكيد حجز طلب الصيانة",
+    opt_dev_ac: "تكييف اسبليت / مركزي",
+    opt_dev_ref: "ثلاجات وتبريد المطاعم / الفنادق",
+    opt_dev_hood: "اصلاح وصيانة هود",
+    opt_dev_ice: "ايس ميكر (صانعة الثلج)",
+    opt_dev_cold: "غرف تبريد وتجميد",
+    opt_srv_repair: "كشف وإصلاح عطل فوري",
+    opt_srv_maint: "صيانة دورية وعقود سنوية",
+    opt_srv_freon: "شحن فريون وتغيير قطع غيار",
+    opt_srv_wash: "غسيل كيماوي وتنظيف فلاتر الدهون",
+    opt_srv_install: "تركيب وتجهيز جديد بالكامل",
     track_title: "تتبع حالة طلبك ومراحل التنفيذ",
-    track_desc: "ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / المكان — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.",
+    track_desc: "ادخل رقم التذكرة أو رقم الهاتف أو اسم العميل / الفندق — ويمكنك تعديل أو إلغاء الطلب طالما لم يبدأ التنفيذ.",
+    ph_track: "مثال: RSC-... أو 010...",
     btn_search: "بحث",
     flt_all: "الكل",
     flt_new: "جديد",
@@ -709,7 +726,9 @@ const I18N = {
     eq_title: "بوابة فحص المعدة وسجل الصيانة (QR Asset)",
     eq_desc: "افتح الكاميرا لمسح الـ QR مباشرة، أو ارفع صورة QR، أو أدخل كود المعدة يدوياً.",
     btn_scan: "فتح الكاميرا لمسح QR",
+    btn_stop_cam: "إيقاف الكاميرا",
     btn_scan_img: "فحص صورة QR",
+    ph_eq: "كود المعدة مثل: EQ-2026",
     btn_check: "فحص المعدة",
     btu_title: "حاسبة القدرة التبريدية الذكية (BTU / Ton / HP)",
     btu_desc: "احسب القدرة الهندسية المناسبة للغرف والمطاعم والمطابخ التجارية",
@@ -717,25 +736,53 @@ const I18N = {
     btu_wid: "العرض (متر) *",
     btu_hei: "الارتفاع (متر) *",
     btu_exp: "طبيعة المكان / التعرض للشمس",
+    opt_exp_hotel: "غرفة فندقية / دور متوسط (عزل جيد)",
+    opt_exp_sun: "دور أخير / واجهة مشمسة",
+    opt_exp_kit: "مطبخ تجاري / منطقة أفران وهود",
     btu_ppl: "عدد الأفراد المتواجدين",
     btu_app: "أجهزة حرارية إضافية (kW)",
-    btn_calc_btu: "احسب القدرة التبريدية والترشيح الهندسي"
+    btn_calc_btu: "احسب القدرة التبريدية والترشيح الهندسي",
+    edit_modal_title: "تعديل بيانات الطلب",
+    edit_lbl_device: "نوع المعدة *",
+    edit_lbl_service: "طبيعة الخدمة *",
+    edit_send_wa: "إرسال إشعار التعديل عبر واتساب للإدارة",
+    btn_save_changes: "حفظ التعديلات",
+    btn_cancel_modal: "إلغاء",
+    cancel_modal_title: "إلغاء الطلب",
+    cancel_confirm_desc: "هل أنت متأكد من إلغاء هذا الطلب قبل بدء التنفيذ؟ يمكنك ذكر السبب وسيتم إشعار الإدارة عبر واتساب.",
+    cancel_reason_lbl: "سبب الإلغاء",
+    opt_rsn_temp: "تم حل المشكلة مؤقتاً",
+    opt_rsn_postpone: "تأجيل الموعد لوقت لاحق",
+    opt_rsn_dup: "حجز مكرر بالخطأ",
+    opt_rsn_rebook: "تغيير تفاصيل الصيانة وإعادة الحجز",
+    cancel_send_wa: "إبلاغ الإدارة بالإلغاء عبر واتساب",
+    btn_confirm_cancel: "تأكيد إلغاء الطلب",
+    btn_back: "رجوع",
+    receipt_sub: "إيصال خدمة صيانة معتمد — الغردقة",
+    toast_copied: "تم النسخ إلى الحافظة",
+    toast_copy_fail: "تعذر النسخ التلقائي — انسخ النص يدوياً"
   },
   en: {
     dir: "ltr",
+    currency: "EGP",
+    title_theme: "Toggle Theme",
     offline: "You are offline — your request is saved locally and will sync automatically",
+    baby_badge: "👶 New Baby Arrival • Yassin",
+    baby_title: "Congratulations on the New Baby, Abu Yassin",
+    baby_desc: "May Allah bless him with happiness and barakah and make him a joy to his parents.",
+    btn_close_now: "Close Now",
     client_badge: "Client Portal",
     header_sub: "AC / Refrigeration / Hoods / Ice Maker / Cold Rooms",
-    btn_baby: "Abu Yassin Surprise",
     btn_wa_admin: "Admin WhatsApp",
-    b2b_portal: "Facilities Portal (B2B)",
-    b2b_desc: "Enter facility, restaurant, or place name to view registered equipment and orders:",
+    b2b_portal: "Hotels Portal (B2B)",
+    b2b_desc: "Enter hotel or restaurant name to view registered equipment and orders:",
     b2b_show: "Show Profile",
+    ph_b2b: "e.g. Siva Grand or El Marsa",
     nav_home: "Book Service",
     nav_track: "Track Order",
     nav_qr: "QR Asset Check",
     nav_btu: "BTU Calculator",
-    hero_badge: "Red Sea Center | Cooling & Maintenance for Individuals & Facilities",
+    hero_badge: "Red Sea Center | Hotels, Restaurants & Commercial Cooling",
     hero_title: "Book Equipment Maintenance & Track Every Step",
     hero_desc: "Submit your request, get a ticket number, edit or cancel while pending, and share via WhatsApp.",
     card_ac: "Central & Split AC",
@@ -745,17 +792,32 @@ const I18N = {
     btn_book: "Book Maintenance Now",
     booking_title: "Instant Maintenance or Setup Booking",
     booking_desc: "Fill in your details to receive a tracking ticket number and WhatsApp summary.",
-    label_name: "Name or Facility / Place Name *",
+    label_name: "Full Name or Facility Name *",
+    ph_name: "e.g. Mahmoud Zain El Sayed",
     label_phone: "Phone Number *",
+    ph_phone: "010xxxxxxxx",
     label_device: "Equipment or Service Type *",
     label_service: "Required Service *",
     label_address: "Detailed Address *",
+    ph_address: "City, hotel or restaurant, area",
     btn_gps: "Use My GPS",
     label_details: "Additional Details",
+    ph_details: "Room or kitchen number, asset code (if any), or issue details",
     label_auto_wa: "Open WhatsApp and send booking details automatically",
     btn_submit_order: "Confirm Maintenance Request",
+    opt_dev_ac: "Split / Central AC",
+    opt_dev_ref: "Restaurant & Hotel Fridges / Cooling",
+    opt_dev_hood: "Kitchen Hood Repair & Maintenance",
+    opt_dev_ice: "Ice Maker",
+    opt_dev_cold: "Cold & Freezer Rooms",
+    opt_srv_repair: "Instant Fault Diagnosis & Repair",
+    opt_srv_maint: "Periodic Maintenance & Annual Contracts",
+    opt_srv_freon: "Refrigerant Charging & Spare Parts",
+    opt_srv_wash: "Chemical Wash & Grease Filter Cleaning",
+    opt_srv_install: "Full New Installation & Setup",
     track_title: "Track Order Status & Progress",
-    track_desc: "Enter ticket number, phone number, or client/place name.",
+    track_desc: "Enter ticket number, phone number, or client/hotel name — edit or cancel before execution starts.",
+    ph_track: "e.g. RSC-... or 010...",
     btn_search: "Search",
     flt_all: "All",
     flt_new: "New",
@@ -765,7 +827,9 @@ const I18N = {
     eq_title: "Equipment Inspection & Service Log (QR Asset)",
     eq_desc: "Open camera to scan QR, upload a QR image, or enter the equipment code manually.",
     btn_scan: "Open Camera to Scan QR",
+    btn_stop_cam: "Stop Camera",
     btn_scan_img: "Scan QR Image",
+    ph_eq: "Equipment code e.g. EQ-2026",
     btn_check: "Inspect Asset",
     btu_title: "Smart Cooling Capacity Calculator (BTU / Ton / HP)",
     btu_desc: "Calculate recommended cooling capacity for rooms, restaurants, and commercial kitchens",
@@ -773,61 +837,233 @@ const I18N = {
     btu_wid: "Width (m) *",
     btu_hei: "Height (m) *",
     btu_exp: "Space Type / Sun Exposure",
+    opt_exp_hotel: "Hotel Room / Mid Floor (Good Insulation)",
+    opt_exp_sun: "Top Floor / Sunny Facade",
+    opt_exp_kit: "Commercial Kitchen / Ovens & Hood",
     btu_ppl: "Number of People",
     btu_app: "Extra Heat Appliances (kW)",
-    btn_calc_btu: "Calculate Cooling Load & Recommendation"
+    btn_calc_btu: "Calculate Cooling Load & Recommendation",
+    edit_modal_title: "Edit Order Details",
+    edit_lbl_device: "Equipment Type *",
+    edit_lbl_service: "Service Type *",
+    edit_send_wa: "Send update notification to admin via WhatsApp",
+    btn_save_changes: "Save Changes",
+    btn_cancel_modal: "Cancel",
+    cancel_modal_title: "Cancel Order",
+    cancel_confirm_desc: "Are you sure you want to cancel this order before work begins? You can select a reason and notify admin on WhatsApp.",
+    cancel_reason_lbl: "Cancellation Reason",
+    opt_rsn_temp: "Issue resolved temporarily",
+    opt_rsn_postpone: "Postponed to a later time",
+    opt_rsn_dup: "Duplicate booking by mistake",
+    opt_rsn_rebook: "Changing details and rebooking",
+    cancel_send_wa: "Notify admin of cancellation via WhatsApp",
+    btn_confirm_cancel: "Confirm Cancellation",
+    btn_back: "Back",
+    receipt_sub: "Certified Maintenance Service Receipt — Hurghada",
+    toast_copied: "Copied to clipboard",
+    toast_copy_fail: "Could not copy automatically — please copy manually"
   },
   de: {
     dir: "ltr",
+    currency: "EGP",
+    title_theme: "Design wechseln",
     offline: "Offline — Ihre Anfrage wird lokal gespeichert und automatisch synchronisiert",
+    baby_badge: "👶 Neugeborenes • Yassin",
+    baby_title: "Herzlichen Glückwunsch zum Nachwuchs, Abu Yassin",
+    baby_desc: "Möge Allah ihn mit Glück und Segen erfüllen und den Eltern viel Freude bereiten.",
+    btn_close_now: "Jetzt schließen",
     client_badge: "Kundenportal",
     header_sub: "Klima / Kühlung / Hauben / Eisbereiter / Kühlräume",
-    btn_baby: "Abu Yassin Überraschung",
     btn_wa_admin: "Admin WhatsApp",
-    b2b_portal: "Objektportal (B2B)",
-    b2b_desc: "Namen des Objekts oder Restaurants eingeben, um Geräte und Aufträge anzuzeigen:",
+    b2b_portal: "Hotelportal (B2B)",
+    b2b_desc: "Hotel- oder Restaurantnamen eingeben, um Geräte und Aufträge anzuzeigen:",
     b2b_show: "Profil anzeigen",
+    ph_b2b: "z. B. Siva Grand oder El Marsa",
     nav_home: "Wartung buchen",
     nav_track: "Auftrag verfolgen",
     nav_qr: "QR-Gerätecheck",
     nav_btu: "BTU-Rechner",
+    hero_badge: "Red Sea Center | Hotels, Restaurants & Gewerbekälte",
+    hero_title: "Wartung buchen & jeden Schritt verfolgen",
+    hero_desc: "Anfrage senden, Ticketnummer erhalten, vor Beginn bearbeiten/stornieren und per WhatsApp teilen.",
+    card_ac: "Zentral- & Split-Klima",
+    card_ref: "Kühlschränke & Kühlräume",
+    card_hood: "Küchenhauben",
+    card_ice: "Eisbereiter",
     btn_book: "Wartung jetzt buchen",
+    booking_title: "Sofortige Wartung oder Montage buchen",
+    booking_desc: "Daten ausfüllen, Ticketnummer erhalten und Details per WhatsApp senden.",
+    label_name: "Vollständiger Name oder Betrieb *",
+    ph_name: "z. B. Mahmoud Zain El Sayed",
+    label_phone: "Telefonnummer *",
+    ph_phone: "010xxxxxxxx",
+    label_device: "Geräte- oder Serviceart *",
+    label_service: "Gewünschter Service *",
+    label_address: "Genaue Adresse *",
+    ph_address: "Stadt, Hotel oder Restaurant, Bereich",
+    btn_gps: "Mein GPS nutzen",
+    label_details: "Zusätzliche Details",
+    ph_details: "Zimmer- oder Küchennummer, Gerätecode oder Fehlerbeschreibung",
+    label_auto_wa: "WhatsApp öffnen und Buchungsdetails automatisch senden",
+    btn_submit_order: "Wartungsanfrage bestätigen",
+    opt_dev_ac: "Split- / Zentralklima",
+    opt_dev_ref: "Kühlschränke & Kühlung (Hotels/Restaurants)",
+    opt_dev_hood: "Küchenhauben Reparatur & Wartung",
+    opt_dev_ice: "Eisbereiter",
+    opt_dev_cold: "Kühl- & Tiefkühlräume",
+    opt_srv_repair: "Sofortige Störungsdiagnose & Reparatur",
+    opt_srv_maint: "Regelmäßige Wartung & Jahresverträge",
+    opt_srv_freon: "Kältemittel & Ersatzteile",
+    opt_srv_wash: "Chemische Reinigung & Fettfilter",
+    opt_srv_install: "Komplette Neuinstallation",
+    track_title: "Auftragsstatus & Fortschritt verfolgen",
+    track_desc: "Ticketnummer, Telefonnummer oder Kunden-/Hotelnamen eingeben — vor Beginn bearbeitbar.",
+    ph_track: "z. B. RSC-... oder 010...",
     btn_search: "Suchen",
     flt_all: "Alle",
     flt_new: "Neu",
     flt_progress: "In Arbeit",
     flt_done: "Erledigt",
     flt_cancelled: "Storniert",
+    eq_title: "Geräteprüfung & Servicehistorie (QR Asset)",
+    eq_desc: "Kamera für QR öffnen, QR-Bild hochladen oder Gerätecode manuell eingeben.",
     btn_scan: "Kamera für QR öffnen",
+    btn_stop_cam: "Kamera stoppen",
     btn_scan_img: "QR-Bild prüfen",
+    ph_eq: "Gerätecode z. B. EQ-2026",
     btn_check: "Prüfen",
-    btn_calc_btu: "Kühllast berechnen"
+    btu_title: "Intelligenter Kühlleistungsrechner (BTU / Ton / HP)",
+    btu_desc: "Passende Kühlleistung für Räume, Restaurants und Großküchen berechnen",
+    btu_len: "Länge (m) *",
+    btu_wid: "Breite (m) *",
+    btu_hei: "Höhe (m) *",
+    btu_exp: "Raumart / Sonneneinstrahlung",
+    opt_exp_hotel: "Hotelzimmer / Mittelgeschoss (Gute Dämmung)",
+    opt_exp_sun: "Dachgeschoss / Sonnige Fassade",
+    opt_exp_kit: "Großküche / Öfen & Haube",
+    btu_ppl: "Anzahl Personen",
+    btu_app: "Zusätzliche Wärmegeräte (kW)",
+    btn_calc_btu: "Kühllast berechnen",
+    edit_modal_title: "Auftragsdaten bearbeiten",
+    edit_lbl_device: "Gerätetyp *",
+    edit_lbl_service: "Serviceart *",
+    edit_send_wa: "Änderung per WhatsApp an Admin senden",
+    btn_save_changes: "Änderungen speichern",
+    btn_cancel_modal: "Abbrechen",
+    cancel_modal_title: "Auftrag stornieren",
+    cancel_confirm_desc: "Möchten Sie diesen Auftrag vor Arbeitsbeginn stornieren? Grund wählen und Admin per WhatsApp informieren.",
+    cancel_reason_lbl: "Stornierungsgrund",
+    opt_rsn_temp: "Problem vorübergehend behoben",
+    opt_rsn_postpone: "Auf später verschoben",
+    opt_rsn_dup: "Versehentliche Doppelbuchung",
+    opt_rsn_rebook: "Details ändern und neu buchen",
+    cancel_send_wa: "Admin per WhatsApp über Stornierung informieren",
+    btn_confirm_cancel: "Stornierung bestätigen",
+    btn_back: "Zurück",
+    receipt_sub: "Zertifizierter Servicebeleg — Hurghada",
+    toast_copied: "In die Zwischenablage kopiert",
+    toast_copy_fail: "Automatisches Kopieren fehlgeschlagen — bitte manuell kopieren"
   },
   ru: {
     dir: "ltr",
+    currency: "EGP",
+    title_theme: "Сменить тему",
     offline: "Нет сети — заявка сохранена локально и отправится автоматически",
+    baby_badge: "👶 Новорождённый • Яссин",
+    baby_title: "Поздравляем с пополнением, Абу Яссин",
+    baby_desc: "Пусть Аллах дарует ему счастье, благодать и радость родителям.",
+    btn_close_now: "Закрыть",
     client_badge: "Кабинет клиента",
     header_sub: "Климат / Холод / Зонты / Льдогенераторы / Камеры",
-    btn_baby: "Сюрприз Абу Яссин",
     btn_wa_admin: "WhatsApp админа",
-    b2b_portal: "Портал объектов (B2B)",
-    b2b_desc: "Введите название объекта или ресторана для просмотра оборудования и заявок:",
+    b2b_portal: "Портал отелей (B2B)",
+    b2b_desc: "Введите название отеля или ресторана для просмотра оборудования и заявок:",
     b2b_show: "Показать",
+    ph_b2b: "напр. Siva Grand или El Marsa",
     nav_home: "Заявка на сервис",
     nav_track: "Статус заказа",
     nav_qr: "QR-проверка",
     nav_btu: "Калькулятор BTU",
+    hero_badge: "Red Sea Center | Отели, рестораны и коммерческий холод",
+    hero_title: "Запишитесь на сервис и следите за каждым этапом",
+    hero_desc: "Оставьте заявку, получите номер тикета, измените или отмените до начала работ и отправьте в WhatsApp.",
+    card_ac: "Центральный и сплит-климат",
+    card_ref: "Холодильники и камеры",
+    card_hood: "Кухонные зонты",
+    card_ice: "Льдогенераторы",
     btn_book: "Записаться на сервис",
+    booking_title: "Быстрая заявка на ремонт или монтаж",
+    booking_desc: "Заполните данные, чтобы получить номер тикета и отправить детали в WhatsApp.",
+    label_name: "ФИО или название объекта *",
+    ph_name: "напр. Махмуд Зейн Эль Сайед",
+    label_phone: "Телефон *",
+    ph_phone: "010xxxxxxxx",
+    label_device: "Тип оборудования или услуги *",
+    label_service: "Требуемая услуга *",
+    label_address: "Подробный адрес *",
+    ph_address: "Город, отель или ресторан, район",
+    btn_gps: "Моё GPS",
+    label_details: "Дополнительные детали",
+    ph_details: "Номер комнаты/кухни, код оборудования или описание поломки",
+    label_auto_wa: "Открыть WhatsApp и отправить детали заявки автоматически",
+    btn_submit_order: "Подтвердить заявку",
+    opt_dev_ac: "Сплит / Центральный кондиционер",
+    opt_dev_ref: "Холодильники и охлаждение (отели/рестораны)",
+    opt_dev_hood: "Ремонт и обслуживание зонтов",
+    opt_dev_ice: "Льдогенератор",
+    opt_dev_cold: "Холодильные и морозильные камеры",
+    opt_srv_repair: "Диагностика и срочный ремонт",
+    opt_srv_maint: "ТО и годовые контракты",
+    opt_srv_freon: "Заправка фреоном и запчасти",
+    opt_srv_wash: "Химическая мойка и жировые фильтры",
+    opt_srv_install: "Полный монтаж под ключ",
+    track_title: "Отслеживание статуса и этапов выполнения",
+    track_desc: "Введите номер тикета, телефон или имя/отель — можно изменить или отменить до начала работ.",
+    ph_track: "напр. RSC-... или 010...",
     btn_search: "Поиск",
     flt_all: "Все",
     flt_new: "Новая",
     flt_progress: "В работе",
     flt_done: "Готово",
     flt_cancelled: "Отменена",
+    eq_title: "Проверка оборудования и история (QR Asset)",
+    eq_desc: "Откройте камеру для QR, загрузите фото QR или введите код вручную.",
     btn_scan: "Открыть камеру QR",
+    btn_stop_cam: "Остановить камеру",
     btn_scan_img: "Проверить фото QR",
+    ph_eq: "Код оборудования, напр. EQ-2026",
     btn_check: "Проверить",
-    btn_calc_btu: "Рассчитать нагрузку BTU"
+    btu_title: "Калькулятор мощности охлаждения (BTU / Ton / HP)",
+    btu_desc: "Рассчитайте мощность охлаждения для помещений, ресторанов и кухонь",
+    btu_len: "Длина (м) *",
+    btu_wid: "Ширина (м) *",
+    btu_hei: "Высота (м) *",
+    btu_exp: "Тип помещения / солнце",
+    opt_exp_hotel: "Номер отеля / средний этаж (хорошая изоляция)",
+    opt_exp_sun: "Верхний этаж / солнечная сторона",
+    opt_exp_kit: "Коммерческая кухня / печи и зонт",
+    btu_ppl: "Количество людей",
+    btu_app: "Доп. тепловые приборы (kW)",
+    btn_calc_btu: "Рассчитать нагрузку BTU",
+    edit_modal_title: "Редактировать заявку",
+    edit_lbl_device: "Тип оборудования *",
+    edit_lbl_service: "Тип услуги *",
+    edit_send_wa: "Отправить уведомление об изменении в WhatsApp админу",
+    btn_save_changes: "Сохранить изменения",
+    btn_cancel_modal: "Отмена",
+    cancel_modal_title: "Отменить заявку",
+    cancel_confirm_desc: "Вы уверены, что хотите отменить заявку до начала работ? Укажите причину и уведомите админа в WhatsApp.",
+    cancel_reason_lbl: "Причина отмены",
+    opt_rsn_temp: "Проблема временно решена",
+    opt_rsn_postpone: "Перенос на другое время",
+    opt_rsn_dup: "Случайный дубликат заявки",
+    opt_rsn_rebook: "Изменение деталей и перезапись",
+    cancel_send_wa: "Уведомить админа об отмене в WhatsApp",
+    btn_confirm_cancel: "Подтвердить отмену",
+    btn_back: "Назад",
+    receipt_sub: "Квитанция сервисного обслуживания — Хургада",
+    toast_copied: "Скопировано в буфер обмена",
+    toast_copy_fail: "Не удалось скопировать автоматически — скопируйте вручную"
   }
 };
 
@@ -850,7 +1086,8 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
 }[c]));
 const ea = s => esc(String(s ?? "").replace(/[\\'"\n\r]/g, c => "\\" + ({ "\n": "n", "\r": "r" }[c] || c)));
 const round2 = n => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
-const money = n => `${round2(n).toLocaleString("en-US", { maximumFractionDigits: 2 })} ج.م`;
+const t = k => ({ ...I18N.ar, ...(I18N[state.lang] || {}) })[k] || I18N.ar[k] || k;
+const money = n => `${round2(n).toLocaleString("en-US", { maximumFractionDigits: 2 })} ${t("currency")}`;
 const genTicket = () => "RSC-" + Date.now().toString(36).toUpperCase().slice(-5) + crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase().slice(0, 3);
 
 function toast(msg, type = "info", ms = 3200) {
@@ -861,7 +1098,7 @@ function toast(msg, type = "info", ms = 3200) {
   setTimeout(() => el.remove(), ms);
 }
 
-/* مفاجأة المولود الجديد يس مع النفافيخ والورود والاختفاء التلقائي */
+/* مفاجأة المولود الجديد يس مع زيادة النفافيخ والورد والاختفاء التلقائي */
 function clearBabyTimers() {
   if (babyAutoCloseTimer) { clearTimeout(babyAutoCloseTimer); babyAutoCloseTimer = null; }
   if (babyFinishCloseTimer) { clearTimeout(babyFinishCloseTimer); babyFinishCloseTimer = null; }
@@ -891,25 +1128,25 @@ function triggerBabySurprise() {
   void overlay.offsetWidth;
   overlay.classList.add("is-open");
 
-  const flowers = ["🌸", "🌹", "🌷", "🌺", "🌼", "💐", "✨"];
-  const colors = ["#38bdf8", "#f472b6", "#facc15", "#4ade80", "#c084fc", "#fb7185"];
+  const flowers = ["🌸", "🌹", "🌷", "🌺", "🌼", "💐", "🪷", "✨"];
+  const colors = ["#38bdf8", "#f472b6", "#facc15", "#4ade80", "#c084fc", "#fb7185", "#2dd4bf"];
 
-  for (let i = 0; i < 42; i++) {
+  for (let i = 0; i < 95; i++) {
     const isBubble = i % 2 === 0;
     const item = document.createElement("div");
     item.style.left = (Math.random() * 96) + "%";
-    item.style.setProperty("--dur", (3.3 + Math.random() * 2.2).toFixed(2) + "s");
-    item.style.setProperty("--delay", (Math.random() * 1.0).toFixed(2) + "s");
-    item.style.setProperty("--drift", ((Math.random() - 0.5) * 140).toFixed(0) + "px");
+    item.style.setProperty("--dur", (3.2 + Math.random() * 2.4).toFixed(2) + "s");
+    item.style.setProperty("--delay", (Math.random() * 1.8).toFixed(2) + "s");
+    item.style.setProperty("--drift", ((Math.random() - 0.5) * 170).toFixed(0) + "px");
 
     if (isBubble) {
       item.className = "baby-item baby-bubble";
-      item.style.setProperty("--size", (16 + Math.random() * 24).toFixed(0) + "px");
+      item.style.setProperty("--size", (20 + Math.random() * 22).toFixed(0) + "px");
       item.style.setProperty("--color", colors[i % colors.length]);
     } else {
       item.className = "baby-item baby-flower";
       item.textContent = flowers[i % flowers.length];
-      item.style.setProperty("--size", (22 + Math.random() * 14).toFixed(0) + "px");
+      item.style.setProperty("--size", (26 + Math.random() * 18).toFixed(0) + "px");
       item.style.setProperty("--rot", ((Math.random() > 0.5 ? 1 : -1) * (240 + Math.random() * 340)).toFixed(0) + "deg");
     }
     particles.appendChild(item);
@@ -954,10 +1191,22 @@ function changeLanguage(lang) {
   const dict = { ...I18N.ar, ...(I18N[lang] || {}) };
   document.getElementById("html-root").setAttribute("dir", dict.dir);
   document.getElementById("html-root").setAttribute("lang", lang);
+
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const k = el.getAttribute("data-i18n");
     if (dict[k]) el.textContent = dict[k];
   });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const k = el.getAttribute("data-i18n-placeholder");
+    if (dict[k]) el.setAttribute("placeholder", dict[k]);
+  });
+
+  document.querySelectorAll("[data-i18n-title]").forEach(el => {
+    const k = el.getAttribute("data-i18n-title");
+    if (dict[k]) el.setAttribute("title", dict[k]);
+  });
+
   ["ar", "en", "de", "ru"].forEach(l => {
     const b = document.getElementById(`lang-btn-${l}`);
     if (b) {
@@ -966,6 +1215,22 @@ function changeLanguage(lang) {
         : "px-2 py-1 rounded-xl bg-slate-300 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs";
     }
   });
+
+  const camBtn = document.getElementById("qr-cam-toggle-btn");
+  if (camBtn) {
+    camBtn.innerHTML = isQrScanning
+      ? `<i class="fa-solid fa-stop"></i> <span>${esc(dict.btn_stop_cam)}</span>`
+      : `<i class="fa-solid fa-camera"></i> <span>${esc(dict.btn_scan)}</span>`;
+  }
+
+  if (state.lastBooking) renderBookingBanner(state.lastBooking);
+  if (document.getElementById("track-input")?.value.trim()) searchOrders();
+  if (document.getElementById("eq-code-input")?.value.trim() && document.getElementById("eq-result-container")?.innerHTML.trim()) {
+    searchEquipment();
+  }
+  if (document.getElementById("b2b-hotel-search")?.value.trim() && document.getElementById("b2b-portal-results")?.innerHTML.trim()) {
+    loadB2BData();
+  }
 }
 
 function toggleTheme() {
@@ -1045,31 +1310,22 @@ function getLiveLocation() {
   );
 }
 
-function copyText(text, successMsg = "تم النسخ إلى الحافظة") {
+function copyText(text, successMsg = t("toast_copied")) {
   if (!text) return;
   if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(text).then(() => toast(successMsg, "success")).catch(() => fallbackCopy(text, successMsg));
+    navigator.clipboard.writeText(text)
+      .then(() => toast(successMsg, "success"))
+      .catch(() => toast(t("toast_copy_fail"), "error"));
   } else {
-    fallbackCopy(text, successMsg);
+    toast(t("toast_copy_fail"), "error");
   }
-}
-
-function fallbackCopy(text, successMsg) {
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  ta.style.position = "fixed";
-  ta.style.opacity = "0";
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand("copy"); toast(successMsg, "success"); } catch (_) {}
-  document.body.removeChild(ta);
 }
 
 function buildBookingSummaryText(order, tag = "تأكيد حجز صيانة") {
   return [
     `${tag} — Red Sea Center`,
     `رقم التذكرة: ${order.id}`,
-    `العميل / الجهة: ${order.name}`,
+    `العميل / المنشأة: ${order.name}`,
     `الهاتف: ${order.phone}`,
     `المعدة: ${order.device}`,
     `الخدمة: ${order.service}`,
@@ -1095,9 +1351,9 @@ function renderBookingBanner(order) {
       </div>
       <div class="flex gap-2 flex-wrap shrink-0">
         <button type="button" onclick="ClientApp.goTrackTicket('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md">
-          <i class="fa-solid fa-magnifying-glass"></i> تتبع الطلب
+          <i class="fa-solid fa-magnifying-glass"></i> ${esc(t("nav_track"))}
         </button>
-        <button type="button" onclick="ClientApp.copyText('${ea(order.id)}', 'تم نسخ رقم التذكرة: ${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold flex items-center gap-1">
+        <button type="button" onclick="ClientApp.copyText('${ea(order.id)}', '${ea(t("toast_copied"))}: ${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold flex items-center gap-1">
           <i class="fa-solid fa-hashtag"></i> نسخ الرقم
         </button>
         <button type="button" onclick="ClientApp.copyBookingText('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md">
@@ -1134,7 +1390,7 @@ function updateOrderInState(orderId, patch) {
 
 function copyBookingText(orderId) {
   const order = findOrderById(orderId, true);
-  if (order) copyText(buildBookingSummaryText(order), "تم نسخ تفاصيل الحجز");
+  if (order) copyText(buildBookingSummaryText(order), t("toast_copied"));
 }
 
 function shareBookingWhatsApp(orderId, customTag = "تأكيد حجز صيانة") {
@@ -1365,19 +1621,19 @@ function searchOrders() {
     sumBox.classList.remove("hidden");
     sumBox.innerHTML = `
       <div class="p-2.5 rounded-2xl bg-amber-950/20 border border-amber-500/30">
-        <span class="text-amber-600 dark:text-amber-400 block">جديد</span>
+        <span class="text-amber-600 dark:text-amber-400 block">${esc(t("flt_new"))}</span>
         <strong class="text-amber-600 dark:text-amber-400 text-sm">${newCnt}</strong>
       </div>
       <div class="p-2.5 rounded-2xl bg-rose-950/20 border border-rose-500/30">
-        <span class="text-rose-600 dark:text-rose-400 block">جاري التنفيذ</span>
+        <span class="text-rose-600 dark:text-rose-400 block">${esc(t("flt_progress"))}</span>
         <strong class="text-rose-600 dark:text-rose-400 text-sm">${progCnt}</strong>
       </div>
       <div class="p-2.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/30">
-        <span class="text-emerald-600 dark:text-emerald-400 block">منتهي</span>
+        <span class="text-emerald-600 dark:text-emerald-400 block">${esc(t("flt_done"))}</span>
         <strong class="text-emerald-600 dark:text-emerald-400 text-sm">${doneCnt}</strong>
       </div>
       <div class="p-2.5 rounded-2xl bg-slate-200/60 dark:bg-slate-800/70 border border-slate-400/30">
-        <span class="text-slate-600 dark:text-slate-300 block">ملغي</span>
+        <span class="text-slate-600 dark:text-slate-300 block">${esc(t("flt_cancelled"))}</span>
         <strong class="text-slate-700 dark:text-slate-200 text-sm">${cancelledCnt}</strong>
       </div>`;
   }
@@ -1403,64 +1659,64 @@ function searchOrders() {
         : isProgress
           ? "bg-rose-500/20 text-rose-700 dark:text-rose-400"
           : "bg-amber-500/20 text-amber-700 dark:text-amber-400";
-    const badgeLabel = isDone ? "تم الانتهاء بنجاح (منتهي)" : isCancelled ? "ملغي" : isProgress ? "جاري التنفيذ" : "جديد (بانتظار البدء)";
+    const badgeLabel = isDone ? t("flt_done") : isCancelled ? t("flt_cancelled") : isProgress ? t("flt_progress") : t("flt_new");
     const cardBorder = isDone ? "border-emerald-500/40" : isCancelled ? "border-slate-500/40" : isProgress ? "border-rose-500/40" : "border-amber-500/40";
 
     return `
       <div class="glass-card p-6 rounded-3xl space-y-4 border ${cardBorder} shadow-xl text-xs">
         <div class="flex justify-between items-center border-b pb-3 gap-2 flex-wrap">
           <div class="flex items-center gap-2">
-            <span class="text-cyan-600 dark:text-cyan-400 font-bold">التذكرة:</span>
+            <span class="text-cyan-600 dark:text-cyan-400 font-bold">#</span>
             <strong class="text-base font-mono">${esc(order.id)}</strong>
-            <button type="button" onclick="ClientApp.copyText('${ea(order.id)}', 'تم نسخ رقم التذكرة')" class="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 text-[10px] font-bold">
-              <i class="fa-solid fa-copy"></i> نسخ
+            <button type="button" onclick="ClientApp.copyText('${ea(order.id)}', '${ea(t("toast_copied"))}')" class="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 text-[10px] font-bold">
+              <i class="fa-solid fa-copy"></i>
             </button>
           </div>
-          <span class="px-3 py-1 rounded-full font-bold ${badgeClass}">${badgeLabel}</span>
+          <span class="px-3 py-1 rounded-full font-bold ${badgeClass}">${esc(badgeLabel)}</span>
         </div>
 
         ${isCancelled ? `
           <div class="p-3 rounded-2xl bg-slate-200/70 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold">
-            <i class="fa-solid fa-ban ml-1"></i> تم إلغاء الطلب — السبب: ${esc(order.cancelReason || "غير محدد")}
+            <i class="fa-solid fa-ban ml-1"></i> ${esc(t("flt_cancelled"))} — ${esc(order.cancelReason || "-")}
           </div>` : `
           <div class="grid grid-cols-3 gap-2 p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 text-center text-[11px]">
-            <div class="p-2 rounded-xl bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold"><i class="fa-solid fa-check-circle ml-1"></i> 1. تم الاستلام</div>
-            <div class="p-2 rounded-xl ${isProgress || isDone ? "bg-rose-500/20 text-rose-800 dark:text-rose-300 font-bold" : "text-slate-500"}"><i class="fa-solid fa-screwdriver-wrench ml-1"></i> 2. جاري التنفيذ</div>
-            <div class="p-2 rounded-xl ${isDone ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-bold" : "text-slate-500"}"><i class="fa-solid fa-flag-checkered ml-1"></i> 3. تم الإنجاز</div>
+            <div class="p-2 rounded-xl bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold"><i class="fa-solid fa-check-circle ml-1"></i> 1. ${esc(t("flt_new"))}</div>
+            <div class="p-2 rounded-xl ${isProgress || isDone ? "bg-rose-500/20 text-rose-800 dark:text-rose-300 font-bold" : "text-slate-500"}"><i class="fa-solid fa-screwdriver-wrench ml-1"></i> 2. ${esc(t("flt_progress"))}</div>
+            <div class="p-2 rounded-xl ${isDone ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-bold" : "text-slate-500"}"><i class="fa-solid fa-flag-checkered ml-1"></i> 3. ${esc(t("flt_done"))}</div>
           </div>`}
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div><strong>العميل:</strong> ${esc(order.name)}</div>
-          <div><strong>المعدة:</strong> ${esc(order.device)}</div>
-          <div><strong>الخدمة:</strong> ${esc(order.service)}</div>
-          <div class="sm:col-span-2"><strong>العنوان:</strong> ${esc(order.address)}</div>
-          ${order.details && order.details !== "-" ? `<div class="sm:col-span-2"><strong>التفاصيل:</strong> ${esc(order.details)}</div>` : ""}
-          ${isDone && totalInvoice > 0 ? `<div class="sm:col-span-2 text-emerald-700 dark:text-emerald-400 font-bold">إجمالي الفاتورة: ${money(totalInvoice)}</div>` : ""}
+          <div><strong>${esc(order.name)}</strong></div>
+          <div><strong>${esc(order.device)}</strong></div>
+          <div>${esc(order.service)}</div>
+          <div class="sm:col-span-2">${esc(order.address)}</div>
+          ${order.details && order.details !== "-" ? `<div class="sm:col-span-2">${esc(order.details)}</div>` : ""}
+          ${isDone && totalInvoice > 0 ? `<div class="sm:col-span-2 text-emerald-700 dark:text-emerald-400 font-bold">${money(totalInvoice)}</div>` : ""}
         </div>
 
         <div class="pt-3 border-t flex flex-wrap justify-between items-center gap-2">
           <div class="flex items-center gap-2 flex-wrap">
             ${canModify ? `
               <button type="button" onclick="ClientApp.openEditOrderModal('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-pen-to-square"></i> تعديل الطلب
+                <i class="fa-solid fa-pen-to-square"></i> ${esc(t("edit_modal_title"))}
               </button>
               <button type="button" onclick="ClientApp.openCancelOrderModal('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-ban"></i> إلغاء الطلب
+                <i class="fa-solid fa-ban"></i> ${esc(t("cancel_modal_title"))}
               </button>` : ""}
             <button type="button" onclick="ClientApp.shareBookingWhatsApp('${ea(order.id)}', 'متابعة طلب صيانة')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md">
-              <i class="fa-brands fa-whatsapp"></i> إرسال واتساب
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
             </button>
           </div>
 
           ${isDone ? `
             <div class="flex items-center gap-1.5 flex-wrap">
-              <span class="font-bold text-amber-700 dark:text-amber-400">تقييمك (${esc(order.rating || 5)} ★):</span>
+              <span class="font-bold text-amber-700 dark:text-amber-400">${esc(order.rating || 5)} ★</span>
               ${[5, 4, 3].map(st => `<button type="button" onclick="ClientApp.rateOrder('${ea(order.firebaseId)}', '${ea(order.id)}', ${st})" class="px-2.5 py-1 rounded-lg ${Number(order.rating) === st ? "bg-amber-500 text-slate-950 font-black" : "bg-slate-200 dark:bg-slate-800 text-amber-700 dark:text-amber-400"}">${st} ★</button>`).join("")}
               <button type="button" onclick="ClientApp.printReceipt('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-blue-600 text-white font-extrabold flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-file-pdf"></i> طباعة / PDF
+                <i class="fa-solid fa-file-pdf"></i> PDF
               </button>
               <button type="button" onclick="ClientApp.shareReceiptWhatsApp('${ea(order.id)}')" class="px-3.5 py-2 rounded-xl bg-teal-400 text-slate-950 font-extrabold flex items-center gap-1.5 shadow-md">
-                <i class="fa-brands fa-whatsapp"></i> إيصال واتساب
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
               </button>
             </div>` : ""}
         </div>
@@ -1473,7 +1729,7 @@ async function rateOrder(fid, ticketId, ratingVal) {
   if (fid && !String(fid).startsWith("local-") && window.updateDoc && window.doc && window.db) {
     try { await window.updateDoc(window.doc(window.db, "orders", fid), { rating: ratingVal }); } catch (_) {}
   }
-  toast(`شكراً لتقييمك (${ratingVal} نجوم)`, "success");
+  toast(`${ratingVal} ★`, "success");
   searchOrders();
 }
 
@@ -1498,20 +1754,19 @@ function printReceipt(orderId) {
   if (!order) return;
   const labor = round2(Number(order.laborCost) || 0);
   const parts = round2(Number(order.partsCost) || 0);
-  document.getElementById("receipt-sub-date").textContent = `رقم التذكرة: ${order.id} — التاريخ: ${order.doneDate || order.date || ""}`;
+  document.getElementById("receipt-sub-date").textContent = `${order.id} — ${order.doneDate || order.date || ""}`;
   document.getElementById("receipt-body").innerHTML = `
     <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 border border-gray-300 rounded">
-      <div><strong>العميل / الجهة:</strong> ${esc(order.name)}</div>
-      <div><strong>الهاتف:</strong> ${esc(order.phone)}</div>
-      <div><strong>المعدة:</strong> ${esc(order.device)}</div>
-      <div><strong>الخدمة:</strong> ${esc(order.service)}</div>
-      <div class="col-span-2"><strong>العنوان:</strong> ${esc(order.address)}</div>
+      <div><strong>${esc(order.name)}</strong></div>
+      <div>${esc(order.phone)}</div>
+      <div>${esc(order.device)}</div>
+      <div>${esc(order.service)}</div>
+      <div class="col-span-2">${esc(order.address)}</div>
     </div>
     <table class="w-full border-collapse border border-gray-400 text-right mt-4">
-      <tr class="bg-gray-100"><th class="border border-gray-400 p-2">البند</th><th class="border border-gray-400 p-2">القيمة</th></tr>
-      <tr><td class="border border-gray-400 p-2">أجور الصيانة</td><td class="border border-gray-400 p-2">${money(labor)}</td></tr>
-      <tr><td class="border border-gray-400 p-2">قطع الغيار</td><td class="border border-gray-400 p-2">${money(parts)}</td></tr>
-      <tr class="bg-gray-200 font-black"><td class="border border-gray-400 p-2">الإجمالي</td><td class="border border-gray-400 p-2">${money(round2(labor + parts))}</td></tr>
+      <tr><td class="border border-gray-400 p-2">${money(labor)}</td></tr>
+      <tr><td class="border border-gray-400 p-2">${money(parts)}</td></tr>
+      <tr class="bg-gray-200 font-black"><td class="border border-gray-400 p-2">${money(round2(labor + parts))}</td></tr>
     </table>`;
   const box = document.getElementById("printable-receipt");
   box.classList.remove("hidden");
@@ -1519,7 +1774,7 @@ function printReceipt(orderId) {
     try {
       window.print();
     } catch (_) {
-      copyText(buildReceiptText(order), "تم نسخ الإيصال؛ يمكنك مشاركته أو طباعته");
+      copyText(buildReceiptText(order), t("toast_copied"));
     }
     setTimeout(() => box.classList.add("hidden"), 500);
   }, 200);
@@ -1540,7 +1795,7 @@ function searchEquipment(forcedCode) {
 
   const eq = state.equipment.find(e => String(e.code || "").toUpperCase() === code);
   if (!eq) {
-    container.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-rose-600 dark:text-rose-400">كود المعدة (${esc(code)}) غير مسجل.</div>`;
+    container.innerHTML = `<div class="glass-card p-6 rounded-2xl text-center text-xs text-rose-600 dark:text-rose-400">${esc(code)}</div>`;
     return;
   }
 
@@ -1558,18 +1813,17 @@ function searchEquipment(forcedCode) {
           <strong class="text-base mr-2">${esc(eq.name)}</strong>
         </div>
         <button type="button" onclick="ClientApp.requestOrderForEquipment('${ea(eq.code)}', '${ea(eq.name)}', '${ea(eq.hotel)}', '${ea(eq.location)}')" class="px-3.5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-extrabold">
-          طلب صيانة لهذه المعدة
+          ${esc(t("btn_book"))}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <div><strong>الجهة / المكان:</strong> ${esc(eq.hotel)}</div>
-        <div><strong>الموقع:</strong> ${esc(eq.location)}</div>
-        <div><strong>الحالة:</strong> <strong class="text-emerald-600 dark:text-emerald-400">${esc(eq.status || "سليمة")}</strong></div>
-        <div><strong>الصيانة القادمة:</strong> <strong class="text-amber-600 dark:text-amber-400">${esc(eq.nextFilterDate || "-")}</strong></div>
+        <div>${esc(eq.hotel)}</div>
+        <div>${esc(eq.location)}</div>
+        <div><strong class="text-emerald-600 dark:text-emerald-400">${esc(eq.status || "-")}</strong></div>
+        <div><strong class="text-amber-600 dark:text-amber-400">${esc(eq.nextFilterDate || "-")}</strong></div>
       </div>
       <div class="pt-2 border-t space-y-1.5">
-        <strong class="block text-cyan-700 dark:text-cyan-400">سجل الطلبات المرتبطة (${related.length}):</strong>
-        ${related.length ? related.map(o => `<div class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 flex justify-between items-center"><span><strong>${esc(o.id)}</strong> — ${esc(o.service)} (${esc(o.date || "")})</span><span class="font-bold ${o.status === "done" ? "text-emerald-600" : o.status === "cancelled" ? "text-slate-500" : "text-rose-600"}">${o.status === "done" ? "منتهي" : o.status === "cancelled" ? "ملغي" : o.status === "progress" ? "جاري التنفيذ" : "جديد"}</span></div>`).join("") : `<p class="text-slate-500">لا توجد طلبات مسجلة لهذه المعدة.</p>`}
+        ${related.length ? related.map(o => `<div class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 flex justify-between items-center"><span><strong>${esc(o.id)}</strong> — ${esc(o.service)} (${esc(o.date || "")})</span><span class="font-bold ${o.status === "done" ? "text-emerald-600" : o.status === "cancelled" ? "text-slate-500" : "text-rose-600"}">${esc(o.status === "done" ? t("flt_done") : o.status === "cancelled" ? t("flt_cancelled") : o.status === "progress" ? t("flt_progress") : t("flt_new"))}</span></div>`).join("") : `<p class="text-slate-500">-</p>`}
       </div>
     </div>`;
 }
@@ -1578,7 +1832,7 @@ function requestOrderForEquipment(code, name, hotel, location) {
   switchView("home");
   document.getElementById("pub-name").value = hotel;
   document.getElementById("pub-address").value = `${hotel} — ${location}`;
-  document.getElementById("pub-details").value = `كود المعدة: ${code} (${name})`;
+  document.getElementById("pub-details").value = `${code} (${name})`;
   document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -1591,13 +1845,12 @@ function startQrScanner() {
   const readerDiv = document.getElementById("reader");
   const btn = document.getElementById("qr-cam-toggle-btn");
   if (isQrScanning) { stopQrScanner(); return; }
-  if (!window.Html5Qrcode) return toast("مكتبة مسح QR غير متاحة", "error");
+  if (!window.Html5Qrcode) return toast("QR library unavailable", "error");
   if (!window.isSecureContext && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
-    setQrStatus("الكاميرا تتطلب اتصال HTTPS آمن — استخدم (فحص صورة QR) أو أدخل الكود يدوياً.");
+    setQrStatus("HTTPS");
     return;
   }
   readerDiv.classList.remove("hidden");
-  setQrStatus("جاري تشغيل الكاميرا...");
   if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
   html5QrCode.start(
     { facingMode: "environment" },
@@ -1605,23 +1858,21 @@ function startQrScanner() {
     decoded => {
       stopQrScanner();
       searchEquipment(decoded);
-      toast(`تم مسح الكود: ${decoded}`, "success");
+      toast(`${decoded}`, "success");
     },
     () => {}
   ).then(() => {
     isQrScanning = true;
-    setQrStatus("الكاميرا نشطة — وجّه العدسة نحو رمز QR");
-    if (btn) btn.innerHTML = `<i class="fa-solid fa-stop"></i> <span>إيقاف الكاميرا</span>`;
+    if (btn) btn.innerHTML = `<i class="fa-solid fa-stop"></i> <span>${esc(t("btn_stop_cam"))}</span>`;
   }).catch(() => {
     isQrScanning = false;
     readerDiv.classList.add("hidden");
-    setQrStatus("تعذر فتح الكاميرا — استخدم (فحص صورة QR) أو اكتب الكود.");
   });
 }
 
 function stopQrScanner() {
   const btn = document.getElementById("qr-cam-toggle-btn");
-  if (btn) btn.innerHTML = `<i class="fa-solid fa-camera"></i> <span>${I18N[state.lang]?.btn_scan || "فتح الكاميرا لمسح QR"}</span>`;
+  if (btn) btn.innerHTML = `<i class="fa-solid fa-camera"></i> <span>${esc(t("btn_scan"))}</span>`;
   if (html5QrCode && isQrScanning) {
     isQrScanning = false;
     html5QrCode.stop().finally(() => { document.getElementById("reader")?.classList.add("hidden"); setQrStatus(""); });
@@ -1635,12 +1886,11 @@ function stopQrScanner() {
 async function scanQrFromFile(input) {
   const file = input?.files?.[0];
   if (!file) return;
-  if (!window.Html5Qrcode) return toast("مكتبة مسح QR غير متاحة", "error");
+  if (!window.Html5Qrcode) return toast("QR library unavailable", "error");
   if (isQrScanning) stopQrScanner();
 
   const readerDiv = document.getElementById("reader");
   readerDiv?.classList.remove("hidden");
-  setQrStatus("جاري قراءة رمز QR من الصورة...");
 
   try {
     if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
@@ -1648,11 +1898,10 @@ async function scanQrFromFile(input) {
     readerDiv?.classList.add("hidden");
     setQrStatus("");
     searchEquipment(decoded);
-    toast(`تم قراءة الكود: ${decoded}`, "success");
+    toast(`${decoded}`, "success");
   } catch (_) {
     readerDiv?.classList.add("hidden");
-    setQrStatus("لم يتم العثور على رمز QR واضح في الصورة.");
-    toast("تعذر قراءة رمز QR من الصورة", "error");
+    toast("QR", "error");
   } finally {
     input.value = "";
   }
@@ -1680,12 +1929,12 @@ function calculateCoolingLoad(e) {
   const box = document.getElementById("btu-result-box");
   box.classList.remove("hidden");
   box.innerHTML = `
-    <div class="text-xs text-cyan-700 dark:text-cyan-400 font-bold">المساحة: ${area.toFixed(1)} م² | الحجم: ${volume.toFixed(1)} م³</div>
+    <div class="text-xs text-cyan-700 dark:text-cyan-400 font-bold">${area.toFixed(1)} m² | ${volume.toFixed(1)} m³</div>
     <div class="text-2xl font-black">${totalBtu.toLocaleString()} BTU/hr</div>
-    <div class="text-xs text-slate-600 dark:text-slate-300">حمل المكان: ${Math.round(spaceBtu).toLocaleString()} | الأفراد: ${peopleBtu.toLocaleString()} | الأجهزة: ${Math.round(appBtu).toLocaleString()} BTU</div>
-    <div class="text-sm font-bold text-amber-600 dark:text-amber-400">الحمل: ${tons} طن تبريدي (~${hp} حصان) — الترشيح: (${recHp} حصان)</div>
-    <button type="button" onclick="ClientApp.bookFromBtu('${ea(`${recHp} حصان / ${tons} طن (${totalBtu.toLocaleString()} BTU)`)}')" class="mt-2 px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-xs">
-      حجز تركيب هذه القدرة الآن
+    <div class="text-xs text-slate-600 dark:text-slate-300">${Math.round(spaceBtu).toLocaleString()} | ${peopleBtu.toLocaleString()} | ${Math.round(appBtu).toLocaleString()} BTU</div>
+    <div class="text-sm font-bold text-amber-600 dark:text-amber-400">${tons} Ton (~${hp} HP) — (${recHp} HP)</div>
+    <button type="button" onclick="ClientApp.bookFromBtu('${ea(`${recHp} HP / ${tons} Ton (${totalBtu.toLocaleString()} BTU)`)}')" class="mt-2 px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-extrabold text-xs">
+      ${esc(t("btn_book"))}
     </button>`;
 }
 
@@ -1693,7 +1942,7 @@ function bookFromBtu(spec) {
   switchView("home");
   document.getElementById("pub-device").value = "تكييف اسبليت / مركزي";
   document.getElementById("pub-service").value = "تركيب وتجهيز جديد بالكامل";
-  document.getElementById("pub-details").value = `القدرة المحسوبة من حاسبة BTU: ${spec}`;
+  document.getElementById("pub-details").value = `BTU: ${spec}`;
   document.getElementById("booking-section")?.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -1703,7 +1952,7 @@ const closeB2BModal = () => document.getElementById("b2b-portal-modal")?.classLi
 function loadB2BData() {
   const q = (document.getElementById("b2b-hotel-search")?.value || "").trim().toLowerCase();
   const resBox = document.getElementById("b2b-portal-results");
-  if (!q) return toast("اكتب اسم الجهة أو المكان أو المنشأة", "error");
+  if (!q) return toast("B2B", "error");
 
   const eqList = state.equipment.filter(e => String(e.hotel || "").toLowerCase().includes(q));
   const ordList = [...state.orders, ...state.archiveOrders].filter(o =>
@@ -1713,12 +1962,12 @@ function loadB2BData() {
   resBox.innerHTML = `
     <div class="space-y-3 text-xs">
       <div class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800">
-        <strong class="text-cyan-700 dark:text-cyan-400 block mb-1">معدات الـ QR (${eqList.length}):</strong>
-        ${eqList.length ? eqList.map(e => `<div class="py-1 border-b border-slate-200 dark:border-slate-800 flex justify-between"><span>${esc(e.code)} — ${esc(e.name)}</span><span class="text-emerald-600 dark:text-emerald-400 font-bold">${esc(e.status || "سليمة")}</span></div>`).join("") : `<span class="text-slate-500">لا توجد معدات مسجلة.</span>`}
+        <strong class="text-cyan-700 dark:text-cyan-400 block mb-1">QR (${eqList.length}):</strong>
+        ${eqList.length ? eqList.map(e => `<div class="py-1 border-b border-slate-200 dark:border-slate-800 flex justify-between"><span>${esc(e.code)} — ${esc(e.name)}</span><span class="text-emerald-600 dark:text-emerald-400 font-bold">${esc(e.status || "-")}</span></div>`).join("") : `<span class="text-slate-500">-</span>`}
       </div>
       <div class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800">
-        <strong class="text-emerald-700 dark:text-emerald-400 block mb-1">الطلبات (${ordList.length}):</strong>
-        ${ordList.length ? ordList.map(o => `<div class="py-1 border-b border-slate-200 dark:border-slate-800 flex justify-between"><span>${esc(o.id)} — ${esc(o.device)}</span><span class="font-bold ${o.status === "done" ? "text-emerald-600" : o.status === "cancelled" ? "text-slate-500" : o.status === "progress" ? "text-rose-600" : "text-amber-600"}">${o.status === "done" ? "منتهي" : o.status === "cancelled" ? "ملغي" : o.status === "progress" ? "جاري التنفيذ" : "جديد"}</span></div>`).join("") : `<span class="text-slate-500">لا توجد طلبات مسجلة.</span>`}
+        <strong class="text-emerald-700 dark:text-emerald-400 block mb-1">${esc(t("nav_track"))} (${ordList.length}):</strong>
+        ${ordList.length ? ordList.map(o => `<div class="py-1 border-b border-slate-200 dark:border-slate-800 flex justify-between"><span>${esc(o.id)} — ${esc(o.device)}</span><span class="font-bold ${o.status === "done" ? "text-emerald-600" : o.status === "cancelled" ? "text-slate-500" : o.status === "progress" ? "text-rose-600" : "text-amber-600"}">${esc(o.status === "done" ? t("flt_done") : o.status === "cancelled" ? t("flt_cancelled") : o.status === "progress" ? t("flt_progress") : t("flt_new"))}</span></div>`).join("") : `<span class="text-slate-500">-</span>`}
       </div>
     </div>`;
 }
@@ -1763,7 +2012,7 @@ window.ClientApp = {
   setTrackFilter, searchOrders, rateOrder, printReceipt, shareReceiptWhatsApp,
   searchEquipment, requestOrderForEquipment, startQrScanner, stopQrScanner,
   scanQrFromFile, calculateCoolingLoad, bookFromBtu, openB2BModal, closeB2BModal, loadB2BData,
-  triggerBabySurprise, dismissBabySurprise
+  dismissBabySurprise
 };
 
 window.addEventListener("online", () => document.getElementById("offline-banner")?.classList.add("hidden"));
